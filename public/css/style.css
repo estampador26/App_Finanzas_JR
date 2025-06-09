@@ -1,0 +1,487 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7f6;
+    color: #333;
+}
+
+header {
+    background-color: #28a745; /* Verde Firebase */
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    margin: 0;
+    flex-grow: 1;
+    text-align: left;
+}
+
+header button {
+    background-color: #fff;
+    color: #28a745;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+header button:hover {
+    background-color: #e2e6ea;
+}
+
+#user-info {
+    color: white;
+    margin-right: 10px;
+}
+
+nav {
+    background-color: #343a40; /* Gris oscuro */
+    display: flex;
+    justify-content: center;
+    padding: 0.5rem 0;
+    flex-wrap: wrap;
+}
+
+nav .nav-button {
+    background-color: #495057;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.25rem;
+    margin: 0.25rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+nav .nav-button:hover,
+nav .nav-button.active {
+    background-color: #28a745; /* Verde Firebase */
+}
+
+main {
+    padding: 20px;
+}
+
+.tab-content {
+    display: none;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tab-content.active {
+    display: block;
+}
+
+h2 {
+    color: #28a745;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Contenedor general para secciones (Registro, Deudas, Dashboard, Presupuestos) */
+.container {
+    display: flex;
+    flex-wrap: wrap; /* Permite que los elementos se envuelvan */
+    gap: 20px;
+    align-items: flex-start; /* Alinea los elementos al principio de la cruz, importante para el layout */
+}
+
+/* Regla general para todas las secciones principales con contenido */
+.form-section,
+.history-section,
+.summary-section,
+.chart-section,
+.budget-progress-section {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Reglas específicas para cada sección de layout en el Dashboard */
+.summary-section {
+    flex: 1 1 300px; /* Crecer, encoger, base de 300px */
+    max-width: 40%; /* No más del 40% del ancho del contenedor en pantallas grandes */
+    min-width: 300px;
+}
+
+.chart-section {
+    flex: 2 1 400px; /* La gráfica puede ser más grande que el resumen */
+    max-width: 60%; /* Ocupa hasta el 60% */
+    min-width: 300px; /* Mínimo 300px */
+}
+
+.budget-progress-section {
+    flex: 1 1 350px; /* Para la sección de presupuestos */
+    min-width: 300px;
+    margin-top: 20px; /* Espacio superior si se envuelve */
+}
+
+form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+form input[type="number"],
+form input[type="text"],
+form select {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+form button {
+    background-color: #007bff; /* Azul Bootstrap */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    width: 100%;
+}
+
+form button:hover {
+    background-color: #0056b3;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+ul li {
+    background-color: #e9ecef;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+ul li.ingreso {
+    border-left: 5px solid #28a745;
+}
+
+ul li.gasto {
+    border-left: 5px solid #dc3545; /* Rojo */
+}
+
+/* Estilos para los botones de la lista de transacciones y presupuestos */
+ul li div { /* Contenedor para agrupar botones Editar y Eliminar */
+    display: flex;
+    gap: 5px; /* Espacio entre los botones */
+}
+
+ul li div button { 
+    padding: 5px 8px;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    color: white;
+}
+
+ul li .edit-button,
+ul li .edit-budget-button { /* Botones de edición */
+    background-color: #007bff; /* Azul */
+}
+ul li .edit-button:hover,
+ul li .edit-budget-button:hover {
+    background-color: #0056b3;
+}
+ul li .delete-button {
+    background-color: #dc3545; /* Rojo */
+}
+ul li .delete-button:hover {
+    background-color: #c82333;
+}
+
+/* Dashboard Specifics */
+.summary-section p {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.summary-section p span {
+    font-weight: bold;
+    color: #28a745;
+}
+
+#monthly-expenses, #total-debts-pending { /* Aplicar color rojo también a deudas pendientes */
+    color: #dc3545 !important;
+}
+
+#monthly-balance {
+    color: #007bff !important;
+}
+
+#category-breakdown div {
+    margin-bottom: 5px;
+    padding: 5px;
+    border-left: 5px solid;
+}
+
+
+/* Estilos para los Filtros de Historial */
+.filters-container {
+    background-color: #f0f0f0;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px; /* Espacio entre los grupos de filtros */
+    align-items: flex-end; /* Alinea los elementos al final */
+}
+
+.filters-container h3 {
+    margin: 0;
+    min-width: 100%; /* Ocupa todo el ancho */
+    font-size: 1.1rem;
+    color: #555;
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Permite que los grupos crezcan */
+    min-width: 150px; /* Ancho mínimo para cada grupo */
+}
+
+.filters-container label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.filters-container select,
+.filters-container input[type="text"] {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 100%; /* Ocupa el ancho completo de su grupo */
+}
+
+.filters-container button {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    flex-shrink: 0; /* Evita que los botones se encojan */
+    margin-top: 10px; /* Espacio superior para alineación */
+}
+
+.filters-container button:hover {
+    background-color: #0056b3;
+}
+
+#clear-filters-button {
+    background-color: #6c757d; /* Gris para limpiar */
+}
+
+#clear-filters-button:hover {
+    background-color: #5a6268;
+}
+
+/* Estilos específicos para la sección de Presupuestos (similar a Deudas) */
+#cancel-budget-edit {
+    background-color: #ffc107; /* Amarillo */
+    color: #333;
+    margin-top: 10px;
+}
+#cancel-budget-edit:hover {
+    background-color: #e0a800;
+}
+
+/* Estilos para la Sección de Progreso de Presupuestos en el Dashboard */
+.budget-progress-section {
+    flex: 1 1 350px; /* Para la sección de presupuestos */
+    min-width: 300px;
+    margin-top: 20px; /* Si se envuelve, da espacio arriba */
+}
+
+.budget-progress-section h3 {
+    text-align: center;
+    color: #28a745;
+    margin-bottom: 20px;
+}
+
+.budget-item {
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    border-left: 5px solid #007bff; /* Color por defecto */
+}
+
+.budget-item.over-budget {
+    border-left-color: #dc3545; /* Rojo si se excede el presupuesto */
+}
+
+.budget-item h4 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.budget-values {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+}
+
+.progress-bar-container {
+    width: 100%;
+    background-color: #e9ecef;
+    border-radius: 5px;
+    height: 10px;
+    overflow: hidden; /* Asegura que la barra interior no se desborde */
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: #28a745; /* Verde por defecto */
+    width: 0%; /* Se controlará con JS */
+    border-radius: 5px;
+    transition: width 0.5s ease-in-out; /* Animación de la barra */
+}
+
+.progress-bar.warning-budget {
+    background-color: #ffc107; /* Color naranja */
+}
+
+.progress-bar.over-budget {
+    background-color: #dc3545; /* Rojo si se excede */
+}
+
+/* Estilos del Modal */
+.modal {
+    display: none; /* ESTO DEBE SER 'none' POR DEFECTO Y DEBE ESTAR PRIMERO */
+    position: fixed; /* Permanece en la misma posición al desplazarse */
+    z-index: 1000; /* Se superpone a otros elementos */
+    left: 0;
+    top: 0;
+    width: 100%; /* Ancho completo */
+    height: 100%; /* Altura completa */
+    overflow: auto; /* Habilita el desplazamiento si el contenido es demasiado grande */
+    background-color: rgba(0,0,0,0.4); /* Fondo semi-transparente oscuro */
+    justify-content: center; /* Para centrar el contenido (sin display: flex aquí) */
+    align-items: center; /* Para centrar el contenido */
+}
+
+/* ESTO ES PARA CUANDO JAVASCRIPT LO ACTIVE. NO LO PONGAS EN LA MISMA REGLA DE ARRIBA. */
+.modal.active-modal { /* Una clase que JS añadirá para mostrar el modal */
+    display: flex; /* Esto sobrescribirá el display: none cuando el modal sea "activo" */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto; /* Centra el contenido horizontalmente */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 90%; /* Ancho del contenido del modal */
+    max-width: 500px; /* Ancho máximo para pantallas grandes */
+    border-radius: 8px;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.modal-content h2 {
+    text-align: center;
+    color: #28a745;
+    margin-top: 0;
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    cursor: pointer;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Media Queries para Responsividad (al final para asegurar prioridad en móvil) */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .form-section,
+    .history-section,
+    .summary-section,
+    .chart-section,
+    .budget-progress-section { /* Incluimos la nueva sección aquí */
+        min-width: unset; /* Elimina el ancho mínimo en pantallas pequeñas */
+        width: 100%;
+        margin-top: 15px; /* Espacio entre secciones cuando se apilan */
+    }
+
+    /* Ajustes específicos para el Dashboard en móvil */
+    .summary-section,
+    .chart-section,
+    .budget-progress-section {
+        max-width: 100%; /* Ocupa todo el ancho en móvil */
+        margin-top: 15px; /* Espacio entre bloques cuando se apilan */
+    }
+    /* El primer elemento no necesita margen superior si no tiene hermanos arriba en móvil */
+    .container > div:first-child {
+        margin-top: 0;
+    }
+
+
+    nav {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    nav .nav-button {
+        width: calc(100% - 20px);
+        margin: 5px 0;
+    }
+
+    /* Filtros de Historial en móvil */
+    .filters-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .filter-group {
+        min-width: unset;
+        width: 100%;
+    }
+    .filters-container button {
+        width: 100%;
+    }
+}
