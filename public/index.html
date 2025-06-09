@@ -32,31 +32,33 @@
                 <div class="form-section">
                     <h3>Nuevo Movimiento</h3>
                     <form id="transaction-form">
-                    <label for="amount">Monto:</label>
-                    <input type="number" id="amount" required>
+                        <label for="amount">Monto:</label>
+                        <input type="number" id="amount" required>
 
-                    <label for="type">Tipo:</label>
-                    <select id="type" required>
-                        <option value="ingreso">Ingreso</option>
-                        <option value="gasto">Gasto</option>
-                        <option value="pago_de_deudas">Pago de Deudas</option> </select>
+                        <label for="date">Fecha:</label>
+                        <input type="date" id="date" required>
+                        <label for="type">Tipo:</label>
+                        <select id="type" required>
+                            <option value="ingreso">Ingreso</option>
+                            <option value="gasto">Gasto</option>
+                            <option value="pago_de_deudas">Pago de Deudas</option>
+                        </select>
 
-                    <div id="category-container">
-                        <label for="category">Categoría:</label>
-                        <input type="text" id="category" placeholder="Ej: Nómina, Alquiler, Comida" required>
-                    </div>
+                        <div id="category-container">
+                            <label for="category">Categoría:</label>
+                            <input type="text" id="category" placeholder="Ej: Nómina, Alquiler, Comida" required>
+                        </div>
 
-                    <div id="debt-selection-container" style="display: none;">
-                        <label for="debt-selector">Seleccionar Deuda:</label>
-                        <select id="debt-selector">
-                            </select>
-                    </div>
+                        <div id="debt-selection-container" style="display: none;">
+                            <label for="debt-selector">Seleccionar Deuda:</label>
+                            <select id="debt-selector"></select>
+                        </div>
 
-                    <label for="description">Descripción:</label>
-                    <input type="text" id="description" placeholder="Opcional">
+                        <label for="description">Descripción:</label>
+                        <input type="text" id="description" placeholder="Opcional">
 
-                    <button type="submit">Guardar Movimiento</button>
-                </form>
+                        <button type="submit">Guardar Movimiento</button>
+                    </form>
                 </div>
                     <div class="history-section">
                         <div class="filters-container">

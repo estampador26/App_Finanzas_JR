@@ -34,6 +34,7 @@ const monthlyBalanceSpan = document.getElementById('monthly-balance');
 const expensesChartCanvas = document.getElementById('expenses-chart');
 const categoryBreakdownDiv = document.getElementById('category-breakdown');
 const totalDebtsPendingSpan = document.getElementById('total-debts-pending');
+document.getElementById('date').valueAsDate = new Date();
 
 // Elementos del Modal de Edición
 const editTransactionModal = document.getElementById('edit-transaction-modal');
