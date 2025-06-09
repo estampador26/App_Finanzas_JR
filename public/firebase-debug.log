@@ -1,0 +1,86 @@
+[debug] [2025-06-09T11:39:40.665Z] ----------------------------------------------------------------------
+[debug] [2025-06-09T11:39:40.669Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\JRodriguez\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2025-06-09T11:39:40.669Z] CLI Version:   14.6.0
+[debug] [2025-06-09T11:39:40.670Z] Platform:      win32
+[debug] [2025-06-09T11:39:40.670Z] Node Version:  v22.16.0
+[debug] [2025-06-09T11:39:40.670Z] Time:          Mon Jun 09 2025 13:39:40 GMT+0200 (hora de verano de Europa central)
+[debug] [2025-06-09T11:39:40.670Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-06-09T11:39:40.846Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-06-09T11:39:40.847Z] > authorizing via signed-in user (estampador26@gmail.com)
+[debug] [2025-06-09T11:39:40.847Z] [iam] checking project myfinanzasjr-ec294 for permissions ["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2025-06-09T11:39:40.848Z] Checked if tokens are valid: true, expires at: 1749472748639
+[debug] [2025-06-09T11:39:40.848Z] Checked if tokens are valid: true, expires at: 1749472748639
+[debug] [2025-06-09T11:39:40.849Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/myfinanzasjr-ec294:testIamPermissions [none]
+[debug] [2025-06-09T11:39:40.849Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/myfinanzasjr-ec294:testIamPermissions x-goog-quota-user=projects/myfinanzasjr-ec294
+[debug] [2025-06-09T11:39:40.849Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/myfinanzasjr-ec294:testIamPermissions {"permissions":["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2025-06-09T11:39:41.091Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/myfinanzasjr-ec294:testIamPermissions 200
+[debug] [2025-06-09T11:39:41.092Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/myfinanzasjr-ec294:testIamPermissions {"permissions":["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2025-06-09T11:39:41.092Z] Checked if tokens are valid: true, expires at: 1749472748639
+[debug] [2025-06-09T11:39:41.092Z] Checked if tokens are valid: true, expires at: 1749472748639
+[debug] [2025-06-09T11:39:41.092Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/myfinanzasjr-ec294 [none]
+[debug] [2025-06-09T11:39:41.379Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/myfinanzasjr-ec294 200
+[debug] [2025-06-09T11:39:41.380Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/myfinanzasjr-ec294 {"projectId":"myfinanzasjr-ec294","projectNumber":"389983903472","displayName":"MyFinanzasJR","name":"projects/myfinanzasjr-ec294","resources":{"hostingSite":"myfinanzasjr-ec294"},"state":"ACTIVE","etag":"1_30f933b4-e1d2-4e1e-b073-9e7ca28d2758"}
+[info] 
+[info] === Deploying to 'myfinanzasjr-ec294'...
+[info] 
+[info] i  deploying firestore, hosting 
+[info] i  firestore: reading indexes from firestore.indexes.json... 
+[info] i  cloud.firestore: checking firestore.rules for compilation errors... 
+[debug] [2025-06-09T11:39:41.383Z] Checked if tokens are valid: true, expires at: 1749472748639
+[debug] [2025-06-09T11:39:41.383Z] Checked if tokens are valid: true, expires at: 1749472748639
+[debug] [2025-06-09T11:39:41.383Z] >>> [apiv2][query] POST https://firebaserules.googleapis.com/v1/projects/myfinanzasjr-ec294:test [none]
+[debug] [2025-06-09T11:39:41.383Z] >>> [apiv2][body] POST https://firebaserules.googleapis.com/v1/projects/myfinanzasjr-ec294:test [omitted]
+[debug] [2025-06-09T11:39:42.160Z] <<< [apiv2][status] POST https://firebaserules.googleapis.com/v1/projects/myfinanzasjr-ec294:test 200
+[debug] [2025-06-09T11:39:42.160Z] <<< [apiv2][body] POST https://firebaserules.googleapis.com/v1/projects/myfinanzasjr-ec294:test {}
+[info] +  cloud.firestore: rules file firestore.rules compiled successfully 
+[debug] [2025-06-09T11:39:42.163Z] Checked if tokens are valid: true, expires at: 1749472748639
+[debug] [2025-06-09T11:39:42.163Z] Checked if tokens are valid: true, expires at: 1749472748639
+[debug] [2025-06-09T11:39:42.163Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/myfinanzasjr-ec294/versions [none]
+[debug] [2025-06-09T11:39:42.163Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/myfinanzasjr-ec294/versions {"status":"CREATED","labels":{"deployment-tool":"cli-firebase"}}
+[debug] [2025-06-09T11:39:44.000Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/myfinanzasjr-ec294/versions 200
+[debug] [2025-06-09T11:39:44.000Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/myfinanzasjr-ec294/versions {"name":"projects/389983903472/sites/myfinanzasjr-ec294/versions/deee0c1368e92223","status":"CREATED","config":{},"labels":{"deployment-tool":"cli-firebase"}}
+[debug] [2025-06-09T11:39:44.001Z] Checked if tokens are valid: true, expires at: 1749472748639
+[debug] [2025-06-09T11:39:44.001Z] Checked if tokens are valid: true, expires at: 1749472748639
+[debug] [2025-06-09T11:39:44.001Z] >>> [apiv2][query] GET https://firestore.googleapis.com/v1/projects/myfinanzasjr-ec294/databases/(default) [none]
+[debug] [2025-06-09T11:39:44.350Z] <<< [apiv2][status] GET https://firestore.googleapis.com/v1/projects/myfinanzasjr-ec294/databases/(default) 200
+[debug] [2025-06-09T11:39:44.350Z] <<< [apiv2][body] GET https://firestore.googleapis.com/v1/projects/myfinanzasjr-ec294/databases/(default) {"name":"projects/myfinanzasjr-ec294/databases/(default)","uid":"deeb3a18-f48a-4d5f-a0e6-8d61dd0d988f","createTime":"2025-06-07T06:20:18.679204Z","updateTime":"2025-06-07T06:20:18.679204Z","locationId":"eur3","type":"FIRESTORE_NATIVE","concurrencyMode":"PESSIMISTIC","versionRetentionPeriod":"3600s","earliestVersionTime":"2025-06-09T10:39:46.948722Z","appEngineIntegrationMode":"DISABLED","keyPrefix":"e","pointInTimeRecoveryEnablement":"POINT_IN_TIME_RECOVERY_DISABLED","deleteProtectionState":"DELETE_PROTECTION_DISABLED","databaseEdition":"STANDARD","freeTier":true,"etag":"IKX3u8ug5I0DMNe/0f7e3o0D"}
+[debug] [2025-06-09T11:39:44.351Z] Checked if tokens are valid: true, expires at: 1749472748639
+[debug] [2025-06-09T11:39:44.351Z] Checked if tokens are valid: true, expires at: 1749472748639
+[debug] [2025-06-09T11:39:44.351Z] >>> [apiv2][query] GET https://firebaserules.googleapis.com/v1/projects/myfinanzasjr-ec294/releases pageSize=10&pageToken=
+[debug] [2025-06-09T11:39:44.630Z] <<< [apiv2][status] GET https://firebaserules.googleapis.com/v1/projects/myfinanzasjr-ec294/releases 200
+[debug] [2025-06-09T11:39:44.631Z] <<< [apiv2][body] GET https://firebaserules.googleapis.com/v1/projects/myfinanzasjr-ec294/releases {"releases":[{"name":"projects/myfinanzasjr-ec294/releases/cloud.firestore","rulesetName":"projects/myfinanzasjr-ec294/rulesets/68d297e0-11fd-4dd2-8b67-ccce5289e169","createTime":"2025-06-07T06:20:25.232596Z","updateTime":"2025-06-07T08:35:59.990537Z"}]}
+[debug] [2025-06-09T11:39:44.631Z] Checked if tokens are valid: true, expires at: 1749472748639
+[debug] [2025-06-09T11:39:44.631Z] Checked if tokens are valid: true, expires at: 1749472748639
+[debug] [2025-06-09T11:39:44.631Z] >>> [apiv2][query] GET https://firebaserules.googleapis.com/v1/projects/myfinanzasjr-ec294/rulesets/68d297e0-11fd-4dd2-8b67-ccce5289e169 [none]
+[debug] [2025-06-09T11:39:45.281Z] <<< [apiv2][status] GET https://firebaserules.googleapis.com/v1/projects/myfinanzasjr-ec294/rulesets/68d297e0-11fd-4dd2-8b67-ccce5289e169 200
+[debug] [2025-06-09T11:39:45.281Z] <<< [apiv2][body] GET https://firebaserules.googleapis.com/v1/projects/myfinanzasjr-ec294/rulesets/68d297e0-11fd-4dd2-8b67-ccce5289e169 [omitted]
+[info] i  firestore: latest version of firestore.rules already up to date, skipping upload... 
+[info] i  firestore: deploying indexes... 
+[debug] [2025-06-09T11:39:45.283Z] Checked if tokens are valid: true, expires at: 1749472748639
+[debug] [2025-06-09T11:39:45.283Z] Checked if tokens are valid: true, expires at: 1749472748639
+[debug] [2025-06-09T11:39:45.283Z] >>> [apiv2][query] GET https://firestore.googleapis.com/v1/projects/myfinanzasjr-ec294/databases/(default)/collectionGroups/-/indexes [none]
+[debug] [2025-06-09T11:39:45.381Z] <<< [apiv2][status] GET https://firestore.googleapis.com/v1/projects/myfinanzasjr-ec294/databases/(default)/collectionGroups/-/indexes 200
+[debug] [2025-06-09T11:39:45.381Z] <<< [apiv2][body] GET https://firestore.googleapis.com/v1/projects/myfinanzasjr-ec294/databases/(default)/collectionGroups/-/indexes {"indexes":[{"name":"projects/myfinanzasjr-ec294/databases/(default)/collectionGroups/transactions/indexes/CICAgOjXh4EK","queryScope":"COLLECTION","fields":[{"fieldPath":"type","order":"ASCENDING"},{"fieldPath":"timestamp","order":"ASCENDING"},{"fieldPath":"__name__","order":"ASCENDING"}],"state":"READY","density":"SPARSE_ALL"},{"name":"projects/myfinanzasjr-ec294/databases/(default)/collectionGroups/transactions/indexes/CICAgJiUpoMK","queryScope":"COLLECTION","fields":[{"fieldPath":"type","order":"ASCENDING"},{"fieldPath":"timestamp","order":"DESCENDING"},{"fieldPath":"__name__","order":"DESCENDING"}],"state":"READY","density":"SPARSE_ALL"},{"name":"projects/myfinanzasjr-ec294/databases/(default)/collectionGroups/budgets/indexes/CICAgJiUsZIK","queryScope":"COLLECTION","fields":[{"fieldPath":"category","order":"ASCENDING"},{"fieldPath":"createdAt","order":"ASCENDING"},{"fieldPath":"__name__","order":"ASCENDING"}],"state":"READY","density":"SPARSE_ALL"}]}
+[debug] [2025-06-09T11:39:45.381Z] Checked if tokens are valid: true, expires at: 1749472748639
+[debug] [2025-06-09T11:39:45.381Z] Checked if tokens are valid: true, expires at: 1749472748639
+[debug] [2025-06-09T11:39:45.381Z] >>> [apiv2][query] GET https://firestore.googleapis.com/v1/projects/myfinanzasjr-ec294/databases/(default)/collectionGroups/-/fields?filter=indexConfig.usesAncestorConfig=false OR ttlConfig:* [none]
+[debug] [2025-06-09T11:39:45.450Z] <<< [apiv2][status] GET https://firestore.googleapis.com/v1/projects/myfinanzasjr-ec294/databases/(default)/collectionGroups/-/fields?filter=indexConfig.usesAncestorConfig=false OR ttlConfig:* 200
+[debug] [2025-06-09T11:39:45.450Z] <<< [apiv2][body] GET https://firestore.googleapis.com/v1/projects/myfinanzasjr-ec294/databases/(default)/collectionGroups/-/fields?filter=indexConfig.usesAncestorConfig=false OR ttlConfig:* {"fields":[{"name":"projects/myfinanzasjr-ec294/databases/(default)/collectionGroups/__default__/fields/*","indexConfig":{"indexes":[{"queryScope":"COLLECTION","fields":[{"fieldPath":"*","order":"ASCENDING"}],"state":"READY"},{"queryScope":"COLLECTION","fields":[{"fieldPath":"*","order":"DESCENDING"}],"state":"READY"},{"queryScope":"COLLECTION","fields":[{"fieldPath":"*","arrayConfig":"CONTAINS"}],"state":"READY"}]}}]}
+[info] i  firestore: The following indexes are defined in your project but are not present in your firestore indexes file:
+	(transactions) -- (type,ASCENDING) (timestamp,ASCENDING) 
+	(transactions) -- (type,ASCENDING) (timestamp,DESCENDING) 
+	(budgets) -- (category,ASCENDING) (createdAt,ASCENDING)  
+[debug] [2025-06-09T11:39:53.128Z] ExitPromptError: User force closed the prompt with SIGINT
+    at Interface.sigint (C:\Users\JRodriguez\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\@inquirer\core\dist\commonjs\lib\create-prompt.js:101:37)
+    at Interface.emit (node:events:518:28)
+    at Interface.emit (node:domain:489:12)
+    at [_ttyWrite] [as _ttyWrite] (node:internal/readline/interface:1128:18)
+    at ReadStream.onkeypress (node:internal/readline/interface:267:20)
+    at ReadStream.emit (node:events:530:35)
+    at ReadStream.emit (node:domain:489:12)
+    at emitKeys (node:internal/readline/utils:370:14)
+    at emitKeys.next (<anonymous>)
+    at ReadStream.onData (node:internal/readline/emitKeypressEvents:64:36)
+[error] 
+[error] Error: An unexpected error has occurred.
