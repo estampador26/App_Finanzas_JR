@@ -21,7 +21,8 @@
         <button class="nav-button active" data-tab="dashboard">Dashboard</button>
         <button class="nav-button" data-tab="registro">Registro</button>
         <button class="nav-button" data-tab="deudas">Control de Deudas</button>
-        <button class="nav-button" data-tab="presupuestos">Presupuestos</button> </nav>
+        <button class="nav-button" data-tab="presupuestos">Presupuestos</button> 
+        <button class="nav-button" data-tab="recurring">Pagos Programados</button>
        
     </nav>
 
@@ -146,6 +147,61 @@
                     </ul>
             </div>
         </div>
+
+        <section id="recurring" class="tab-content">
+            <h2>Gestión de Pagos Programados</h2>
+            <div class="container">
+                <div class="form-section">
+                <h3>Añadir o Editar un Pago Programado</h3>
+                <form id="recurring-payment-form">
+                    <input type="hidden" id="recurring-id">
+                    
+                    <div class="form-group">
+                        <label for="recurring-name">Nombre del Pago:</label>
+                        <input type="text" id="recurring-name" placeholder="Ej: Alquiler, Netflix, Cuota Klarna" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="recurring-amount">Monto (€):</label>
+                        <input type="number" id="recurring-amount" step="0.01" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="recurring-category">Categoría del Gasto Asociado:</label>
+                        <input type="text" id="recurring-category" placeholder="Ej: vivienda, suscripciones, ropa" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="recurring-day">Día de Pago (1-31):</label>
+                        <input type="number" id="recurring-day" min="1" max="31" placeholder="Día del mes" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="recurring-type">Tipo de Pago:</label>
+                        <select id="recurring-type">
+                            <option value="Fijo">Fijo (se repite cada mes)</option>
+                            <option value="Cuotas">Cuotas (pago limitado)</option>
+                        </select>
+                    </div>
+
+                    <div id="recurring-installments-container" style="display: none;">
+                        <div class="form-group">
+                            <label for="recurring-total-installments">Número Total de Cuotas:</label>
+                            <input type="number" id="recurring-total-installments" min="1">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="button">Guardar Pago Programado</button>
+                    <button type="button" id="cancel-recurring-edit" class="button secondary-button" style="display:none;">Cancelar Edición</button>
+                </form>
+            </div>
+
+        <div class="history-section">
+            <h3>Mis Pagos Programados</h3>
+            <ul id="recurring-payments-list">
+                </ul>
+        </div>
+     </div>
     </section>
 
 

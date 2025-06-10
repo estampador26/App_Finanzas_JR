@@ -1,6 +1,6 @@
-// Tu configuración de Firebase REAL.
+// Tu configuración de Firebase REAL Y CORRECTA.
 const firebaseConfig = {
-    apiKey: "AIzaSyC6jlFj0JO-U05fqvOr1JE39Umf0XLmYpM",
+    apiKey: "AIzaSyAS0gueh4j4mrgHECmP7LVYxwLNYHucOL4",
     authDomain: "myfinanzasjr-ec294.firebaseapp.com",
     projectId: "myfinanzasjr-ec294",
     storageBucket: "myfinanzasjr-ec294.firebasestorage.app",
@@ -67,6 +67,19 @@ const budgetAmountInput = document.getElementById('budget-amount');
 const budgetIdInput = document.getElementById('budget-id');
 const budgetsList = document.getElementById('budgets-list');
 const cancelBudgetEditButton = document.getElementById('cancel-budget-edit');
+
+// Elementos para la gestión de Pagos Programados (NUEVO)
+const recurringPaymentForm = document.getElementById('recurring-payment-form');
+const recurringIdInput = document.getElementById('recurring-id');
+const recurringNameInput = document.getElementById('recurring-name');
+const recurringAmountInput = document.getElementById('recurring-amount');
+const recurringCategoryInput = document.getElementById('recurring-category');
+const recurringDayInput = document.getElementById('recurring-day');
+const recurringTypeSelect = document.getElementById('recurring-type');
+const recurringInstallmentsContainer = document.getElementById('recurring-installments-container');
+const recurringTotalInstallmentsInput = document.getElementById('recurring-total-installments');
+const cancelRecurringEditButton = document.getElementById('cancel-recurring-edit');
+const recurringPaymentsList = document.getElementById('recurring-payments-list');
 
 // Elementos para el progreso de presupuestos en Dashboard
 const budgetProgressList = document.getElementById('budget-progress-list');
@@ -227,6 +240,83 @@ async function loadDebtsForSelector() {
     } catch (error) {
         console.error("Error al cargar deudas para el selector:", error);
     }
+}
+
+// --- Lógica para el formulario de Pagos Programados (NUEVO) ---
+
+// --- Lógica para el formulario de Pagos Programados (NUEVO Y MEJORADO) ---
+
+// Verificamos que los elementos del formulario existen antes de añadirles lógica
+if (recurringTypeSelect && recurringPaymentForm) {
+
+    // Listener para mostrar/ocultar el campo de cuotas
+    recurringTypeSelect.addEventListener('change', () => {
+        if (recurringTypeSelect.value === 'Cuotas') {
+            recurringInstallmentsContainer.style.display = 'block';
+            recurringTotalInstallmentsInput.setAttribute('required', 'required');
+        } else {
+            recurringInstallmentsContainer.style.display = 'none';
+            recurringTotalInstallmentsInput.removeAttribute('required');
+        }
+    });
+
+    // Listener para guardar un nuevo pago programado
+    recurringPaymentForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!currentUser) {
+            alert("Debes iniciar sesión para guardar un pago.");
+            return;
+        }
+
+        const name = recurringNameInput.value.trim();
+        const amount = parseFloat(recurringAmountInput.value);
+        const category = recurringCategoryInput.value.trim();
+        const paymentDay = parseInt(recurringDayInput.value);
+        const type = recurringTypeSelect.value;
+
+        if (!name || !category || isNaN(amount) || amount <= 0 || isNaN(paymentDay) || paymentDay < 1 || paymentDay > 31) {
+            alert("Por favor, rellena todos los campos con valores válidos.");
+            return;
+        }
+
+        const paymentData = {
+            name,
+            amount,
+            category: category.toLowerCase(),
+            paymentDay,
+            type,
+            isActive: true,
+            userId: currentUser.uid,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp() // Añadimos fecha de creación
+        };
+
+        if (type === 'Cuotas') {
+            const totalInstallments = parseInt(recurringTotalInstallmentsInput.value);
+            if (isNaN(totalInstallments) || totalInstallments <= 0) {
+                alert("Por favor, introduce un número total de cuotas válido.");
+                return;
+            }
+            paymentData.totalInstallments = totalInstallments;
+            paymentData.paidInstallments = 0;
+        }
+
+        try {
+            await db.collection('users').doc(currentUser.uid).collection('recurringPayments').add(paymentData);
+
+            alert('¡Pago programado guardado con éxito!');
+            recurringPaymentForm.reset();
+            recurringTypeSelect.dispatchEvent(new Event('change'));
+
+            // loadRecurringPayments(); // Lo añadiremos más tarde
+
+        } catch (error) {
+            console.error("Error al guardar el pago programado:", error);
+            alert("Hubo un error al guardar el pago programado. Revisa la consola.");
+        }
+    });
+
+} else {
+    console.warn("Los elementos del formulario de pagos programados no se encontraron en esta página.");
 }
 
 // --- Funciones de Gestión de Transacciones (Pestaña Registro) ---
