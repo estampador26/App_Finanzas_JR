@@ -29,6 +29,19 @@ Este documento registra cronológicamente las decisiones técnicas, los pasos de
 
 ### Fase 3: Sistema de Diseño (Fecha: 2025-06-23)
 
+- **Entrada 42-46:** Se crea y se integra un componente `Layout` reutilizable para definir la estructura de las páginas autenticadas, incluyendo una barra de navegación y un menú de usuario con la funcionalidad de cierre de sesión centralizada. Se guarda en el commit (`feat: Create and integrate main Layout component`).
+
+---
+
+### Fase 4: Despliegue y QA (Fecha: 2025-06-23)
+
+- **Entrada 47:** Se inicializa Firebase Hosting en el proyecto, configurándolo para servir los archivos desde el directorio `dist` como una Single-Page Application.
+- **Entrada 48:** Se construye la aplicación para producción (`npm run build`).
+- **Entrada 49:** Se despliega la aplicación a Firebase Hosting, obteniendo la URL pública: https://finanzasjrweb.web.app.
+
+---
+
+
 - **Entrada 37:** Se define una paleta de colores personalizada (primarios, neutrales, acentos) en `tailwind.config.js` para establecer una identidad visual coherente.
 - **Entrada 38:** Se aplican los nuevos colores del sistema de diseño a los componentes existentes.
 - **Entrada 39:** Se integra la fuente "Inter" desde Google Fonts para mejorar la legibilidad y la estética de la interfaz.
