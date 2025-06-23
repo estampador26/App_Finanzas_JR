@@ -50,6 +50,12 @@ export default function DashboardPage({ user }) {
             <p className="mt-1 text-sm text-neutral-600">
               Aquí tienes un resumen de tu actividad financiera.
             </p>
+            {user && (
+              <div className="mt-2 text-xs text-neutral-400 bg-neutral-100 p-2 rounded-md">
+                <p><strong>Email:</strong> {user.email}</p>
+                <p><strong>UID:</strong> {user.uid}</p>
+              </div>
+            )}
           </div>
           <div>
             <button 
