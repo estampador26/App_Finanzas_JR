@@ -1,11 +1,29 @@
+import { useState, useEffect } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './firebase';
+import LoginPage from './pages/LoginPage';
+import DashboardPage from './pages/DashboardPage';
+
 function App() {
-  return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <h1 className="text-3xl font-bold text-blue-600">
-        FinanzasJR v3 - ¡En Construcción!
-      </h1>
-    </div>
-  );
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+      setLoading(false);
+    });
+
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, []);
+
+  if (loading) {
+    // You can add a loading spinner here for better UX
+    return <div>Cargando...</div>;
+  }
+
+  return user ? <DashboardPage /> : <LoginPage />;
 }
 
 export default App;
