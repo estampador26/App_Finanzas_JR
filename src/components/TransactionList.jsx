@@ -10,7 +10,9 @@ export default function TransactionList({ transactions }) {
             <div className="px-4 py-4 sm:px-6 flex items-center justify-between">
               <div className="flex-1">
                 <p className="text-sm font-medium text-primary truncate">{transaction.description}</p>
-                <p className="text-sm text-neutral-500">{transaction.date}</p>
+                <p className="text-sm text-neutral-500">
+                  {transaction.createdAt ? new Date(transaction.createdAt.seconds * 1000).toLocaleDateString() : transaction.date}
+                </p>
               </div>
               <div>
                 <p className={`text-sm font-semibold ${transaction.type === 'income' ? 'text-accent-success' : 'text-accent-error'}`}>

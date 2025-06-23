@@ -1,25 +1,45 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { collection, query, where, onSnapshot, addDoc, serverTimestamp, orderBy } from 'firebase/firestore';
+import { db } from '../firebase';
 import Layout from '../components/Layout';
 import TransactionList from '../components/TransactionList';
 import FinancialSummary from '../components/FinancialSummary';
 import AddTransactionModal from '../components/AddTransactionModal';
 
-const initialTransactions = [
-  { id: 1, description: 'Salario Mensual', amount: 3000, type: 'income', date: '2025-06-23' },
-  { id: 2, description: 'Alquiler', amount: 1200, type: 'expense', date: '2025-06-22' },
-  { id: 3, description: 'Compra en supermercado', amount: 150, type: 'expense', date: '2025-06-21' },
-  { id: 4, description: 'Venta de item online', amount: 75, type: 'income', date: '2025-06-20' },
-];
-
-export default function DashboardPage() {
+export default function DashboardPage({ user }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [transactions, setTransactions] = useState(initialTransactions);
+  const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleAddTransaction = (newTransaction) => {
-    setTransactions(prev => [
-      { ...newTransaction, id: Date.now(), date: new Date().toISOString().slice(0, 10) }, 
-      ...prev
-    ]);
+  useEffect(() => {
+    if (!user) return;
+    setLoading(true);
+
+    const transactionsCol = collection(db, 'transactions');
+    const q = query(transactionsCol, where('uid', '==', user.uid), orderBy('createdAt', 'desc'));
+
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const userTransactions = [];
+      querySnapshot.forEach((doc) => {
+        userTransactions.push({ id: doc.id, ...doc.data() });
+      });
+      setTransactions(userTransactions);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, [user]);
+
+  const handleAddTransaction = async (newTransaction) => {
+    try {
+      await addDoc(collection(db, 'transactions'), {
+        ...newTransaction,
+        uid: user.uid,
+        createdAt: serverTimestamp(),
+      });
+    } catch (error) {
+      console.error("Error adding transaction: ", error);
+    }
   };
   return (
     <Layout>
@@ -40,8 +60,14 @@ export default function DashboardPage() {
             </button>
           </div>
         </div>
-        <FinancialSummary transactions={transactions} />
-        <TransactionList transactions={transactions} />
+        {loading ? (
+          <p>Cargando transacciones...</p>
+        ) : (
+          <>
+            <FinancialSummary transactions={transactions} />
+            <TransactionList transactions={transactions} />
+          </>
+        )}
         <AddTransactionModal 
           isOpen={isModalOpen} 
           onClose={() => setIsModalOpen(false)}

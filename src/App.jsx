@@ -23,7 +23,7 @@ function App() {
     return <div>Cargando...</div>;
   }
 
-  return user ? <DashboardPage /> : <LoginPage />;
+  return user ? <DashboardPage user={user} /> : <LoginPage />;
 }
 
 export default App;
