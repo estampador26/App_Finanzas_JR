@@ -69,34 +69,72 @@ export default function CalendarPage({ user, onOpenTransactionModal }) {
     const today = new Date();
     today.setHours(0,0,0,0);
     
-    if (recurringPaymentsSnapshot) {
-        recurringPaymentsSnapshot.docs.forEach(doc => {
-            const payment = { id: doc.id, ...doc.data() };
-            const paymentDate = setDate(new Date(year, month), payment.paymentDay);
+    if (recurringPaymentsSnapshot && transactionsSnapshot) {
+      const allTransactions = transactionsSnapshot.docs.map(d => ({ id: d.id, ...d.data() }));
 
-            const isPaid = transactionsSnapshot?.docs.some(tDoc => {
-                const t = tDoc.data();
-                const tDate = toTimestamp(t.date)?.toDate();
-                return t.recurringPaymentId === payment.id &&
-                       tDate &&
-                       getYear(tDate) === year &&
-                       getMonth(tDate) === month;
-            });
+      recurringPaymentsSnapshot.docs.forEach(doc => {
+        const payment = { id: doc.id, ...doc.data() };
+        const paymentDate = setDate(new Date(year, month), payment.paymentDay);
 
+        const isPaidThisMonth = allTransactions.some(t => {
+          const tDate = toTimestamp(t.date)?.toDate();
+          return t.recurringPaymentId === payment.id && tDate && getYear(tDate) === year && getMonth(tDate) === month;
+        });
+
+        // Lógica para pagos del mes actual
+        if (!isPaidThisMonth) {
             monthEvents.push({
-                title: `${isPaid ? '✅ ' : ''}${payment.name}`,
+                title: payment.name,
                 start: paymentDate,
                 end: paymentDate,
                 allDay: true,
                 resource: { 
                     type: 'recurring',
                     amount: payment.amount, 
-                    isPaid: isPaid,
-                    color: isPaid ? '#22c55e' : (paymentDate < today && !isPaid ? '#ef4444' : '#3b82f6'),
+                    isPaid: false,
+                    color: paymentDate < today ? '#ef4444' : '#3b82f6', // Vencido o pendiente
                     originalDoc: payment
                 }
             });
-        });
+        } else {
+           monthEvents.push({
+                title: `✅ ${payment.name}`,
+                start: paymentDate,
+                end: paymentDate,
+                allDay: true,
+                resource: { type: 'recurring', amount: payment.amount, isPaid: true, color: '#22c55e', originalDoc: payment }
+            });
+        }
+
+        // Lógica para pagos vencidos de meses anteriores
+        for (let m = 0; m < month; m++) {
+          const pastMonthDate = setDate(new Date(year, m), payment.paymentDay);
+          const isPaidInPastMonth = allTransactions.some(t => {
+            const tDate = toTimestamp(t.date)?.toDate();
+            return t.recurringPaymentId === payment.id && tDate && getYear(tDate) === year && getMonth(tDate) === m;
+          });
+
+          if (!isPaidInPastMonth && pastMonthDate < today) {
+            const alreadyExists = monthEvents.some(e => e.resource.originalDoc.id === payment.id && e.resource.isOverdue);
+            if (!alreadyExists) {
+              monthEvents.push({
+                  title: `🔴 VENCIDO - ${payment.name}`,
+                  start: setDate(new Date(year, month), 1), // Mostrar al inicio del mes actual
+                  end: setDate(new Date(year, month), 1),
+                  allDay: true,
+                  resource: { 
+                      type: 'recurring',
+                      amount: payment.amount, 
+                      isPaid: false,
+                      isOverdue: true,
+                      color: '#ef4444',
+                      originalDoc: payment
+                  }
+              });
+            }
+          }
+        }
+      });
     }
 
     if (transactionsSnapshot) {
