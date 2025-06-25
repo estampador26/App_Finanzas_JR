@@ -140,21 +140,7 @@ export default function DashboardPage({ onOpenTransactionModal }) {
 
 
 
-  const handlePrevMonth = () => {
-    setViewedDate(currentDate => {
-      const newDate = new Date(currentDate);
-      newDate.setMonth(newDate.getMonth() - 1);
-      return newDate;
-    });
-  };
 
-  const handleNextMonth = () => {
-    setViewedDate(currentDate => {
-      const newDate = new Date(currentDate);
-      newDate.setMonth(newDate.getMonth() + 1);
-      return newDate;
-    });
-  };
 
   const handleRegisterPayment = (payment) => {
     if (!user) return;
@@ -200,19 +186,7 @@ export default function DashboardPage({ onOpenTransactionModal }) {
         </div>
       </Header>
 
-      <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4 flex items-center justify-between">
-        <div className="flex-1 flex items-center">
-            <button onClick={handlePrevMonth} className="btn btn-ghost btn-circle text-gray-500 hover:bg-gray-100">‹</button>
-        </div>
-        <div className="flex-shrink-0 text-center">
-            <div className="font-bold text-xl text-gray-800 capitalize">{viewedDate.toLocaleString('es-ES', { month: 'long' })}</div>
-            <div className="text-sm text-gray-500">{viewedDate.getFullYear()}</div>
-        </div>
-        <div className="flex-1 flex justify-end items-center">
-            <button onClick={() => setViewedDate(new Date())} className="btn btn-secondary btn-sm font-semibold">Hoy</button>
-            <button onClick={handleNextMonth} className="btn btn-ghost btn-circle text-gray-500 hover:bg-gray-100">›</button>
-        </div>
-      </div>
+
       
 
 

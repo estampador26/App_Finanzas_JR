@@ -23,9 +23,17 @@ export default function MonthNavigator({ currentDate, setCurrentDate }) {
         <ChevronLeftIcon className="h-6 w-6" />
       </button>
       
-      <h2 className="text-xl md:text-2xl font-bold text-center w-48 capitalize">
-        {format(currentDate, 'MMMM yyyy', { locale: es })}
-      </h2>
+      <div className="text-center w-48">
+        <h2 className="text-xl md:text-2xl font-bold capitalize">
+          {format(currentDate, 'MMMM yyyy', { locale: es })}
+        </h2>
+        <button 
+          onClick={() => setCurrentDate(new Date())}
+          className="text-sm text-blue-600 hover:underline"
+        >
+          Hoy
+        </button>
+      </div>
 
       <button 
         onClick={handleNextMonth} 
