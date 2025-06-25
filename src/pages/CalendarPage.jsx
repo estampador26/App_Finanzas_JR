@@ -9,6 +9,8 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import '../styles/Calendar.css';
 import Header from '../components/Header';
 import EventPopover from '../components/EventPopover';
+import MobileCalendarView from '../components/MobileCalendarView';
+import useWindowWidth from '../hooks/useWindowWidth';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { collection, query, where } from 'firebase/firestore';
 import { db } from '../firebase';
@@ -46,6 +48,7 @@ const eventStyleGetter = (event) => {
 export default function CalendarPage({ user, onOpenTransactionModal }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const windowWidth = useWindowWidth();
 
   const [transactionsSnapshot, loadingTransactions] = useCollection(
     user ? query(collection(db, 'transactions'), where('userId', '==', user.uid)) : null
@@ -213,37 +216,32 @@ export default function CalendarPage({ user, onOpenTransactionModal }) {
         title="Calendario Financiero"
         subtitle="Visualiza tus pagos, ingresos y vencimientos."
       />
-      <div className="calendar-container relative bg-white p-4 rounded-lg border border-gray-200 shadow-sm" style={{ height: '70vh' }}>
-        <Calendar
-          localizer={localizer}
-          events={events}
-          startAccessor="start"
-          endAccessor="end"
-          date={currentDate}
-          onNavigate={handleNavigate}
-          onSelectEvent={handleSelectEvent}
-          eventPropGetter={eventStyleGetter}
-          messages={{
-            next: "Siguiente",
-            previous: "Anterior",
-            today: "Hoy",
-            month: "Mes",
-            week: "Semana",
-            day: "Día",
-            agenda: "Agenda",
-            date: "Fecha",
-            time: "Hora",
-            event: "Evento",
-            noEventsInRange: "No hay eventos en este rango.",
-            showMore: total => `+ Ver más (${total})`
-          }}
-        />
+      <div className="calendar-container relative bg-white p-4 rounded-lg border border-gray-200 shadow-sm" style={windowWidth >= 768 ? { height: '70vh' } : {}}>
+        {windowWidth < 768 ? (
+          <MobileCalendarView events={events} onEventClick={handleSelectEvent} />
+        ) : (
+          <Calendar
+            localizer={localizer}
+            events={events}
+            startAccessor="start"
+            endAccessor="end"
+            style={{ height: '100%' }}
+            messages={messages}
+            onSelectEvent={handleSelectEvent}
+            eventPropGetter={eventStyleGetter}
+            components={{
+              toolbar: CustomToolbar,
+            }}
+            onNavigate={handleNavigate}
+            date={currentDate}
+          />
+        )}
+      </div>
         <EventPopover 
             event={selectedEvent}
             onClose={handleClosePopover}
             onRegisterPayment={handleRegisterPayment}
         />
-      </div>
     </div>
   );
 }
