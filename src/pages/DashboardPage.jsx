@@ -68,10 +68,11 @@ export default function DashboardPage({ onOpenTransactionModal }) {
     const pendingPaymentsForMonth = sanitizedRecurring.filter(p => {
       const isPaidThisMonth = transactions.some(t => {
         if (t.recurringPaymentId !== p.id) return false;
-        const paymentTargetDate = toTimestamp(t.targetDate)?.toDate();
-        if (!paymentTargetDate) return false;
-        return paymentTargetDate.getFullYear() === viewedDate.getFullYear() &&
-               paymentTargetDate.getMonth() === viewedDate.getMonth();
+        // Se verifica la fecha real de la transacción ('date'), no un 'targetDate'.
+        const paymentDate = toTimestamp(t.date)?.toDate();
+        if (!paymentDate) return false;
+        return paymentDate.getFullYear() === viewedDate.getFullYear() &&
+               paymentDate.getMonth() === viewedDate.getMonth();
       });
 
       if (isPaidThisMonth) return false;
