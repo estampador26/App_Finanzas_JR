@@ -40,7 +40,7 @@ const renderActiveShape = (props) => {
 };
 
 const ChartLegend = ({ data }) => (
-  <div className="w-1/3 flex-shrink-0 pr-4">
+  <div className="w-full md:w-1/3 flex-shrink-0 md:pr-4 mb-4 md:mb-0">
     <ul className="space-y-2 text-sm">
       {data.map((entry, index) => (
         <li key={`legend-${index}`} className="flex items-center justify-between">
@@ -125,10 +125,10 @@ const CategoryChart = ({ transactions, categoriesMap, isPrivacyMode }) => {
     <div className="bg-white rounded-lg shadow p-4 h-full flex flex-col">
       <h3 className="text-lg font-bold text-neutral-700 mb-4 text-center">Gastos por Categoría</h3>
       {chartData.length > 0 ? (
-        <div className="flex flex-row items-center grow">
+        <div className="flex flex-col md:flex-row items-center grow">
           <ChartLegend data={chartData} />
-          <div className="w-2/3 h-full">
-            <ResponsiveContainer width="100%" height={300}>
+          <div className="w-full md:w-2/3 h-full">
+            <ResponsiveContainer width="100%" height={250}>
               <PieChart>
                 <Pie
                   activeIndex={activeIndex}
