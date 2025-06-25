@@ -144,17 +144,19 @@ export default function DashboardPage({ onOpenTransactionModal }) {
 
   const handleRegisterPayment = (payment) => {
     if (!user) return;
-    const targetDate = new Date(viewedDate.getFullYear(), viewedDate.getMonth(), payment.paymentDay);
-    
-    onOpenTransactionModal({
+
+    // Al registrar un pago recurrente, CREAMOS una nueva transacción.
+    // No pasamos una transacción para editar (primer argumento null),
+    // sino datos iniciales para pre-rellenar el formulario (segundo argumento).
+    const initialData = {
       amount: payment.amount,
       categoryId: payment.categoryId,
       description: `Pago de ${payment.name}`,
-      isCreatingFromRecurring: true,
+      date: new Date(), // La fecha de la transacción es hoy por defecto
       recurringPaymentId: payment.id,
-      date: new Date(),
-      targetDateForRecurring: targetDate,
-    });
+    };
+
+    onOpenTransactionModal(null, initialData);
   };
 
   if (loadingAuth || loadingIncomes || loadingTransactions || loadingRecurring || loadingCategories) {
