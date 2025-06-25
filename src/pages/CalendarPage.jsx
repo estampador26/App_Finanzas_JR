@@ -6,6 +6,7 @@ import startOfWeek from 'date-fns/startOfWeek';
 import getDay from 'date-fns/getDay';
 import es from 'date-fns/locale/es';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import '../styles/Calendar.css';
 import Header from '../components/Header';
 import EventPopover from '../components/EventPopover';
 import { useCollection } from 'react-firebase-hooks/firestore';
@@ -212,7 +213,7 @@ export default function CalendarPage({ user, onOpenTransactionModal }) {
         title="Calendario Financiero"
         subtitle="Visualiza tus pagos, ingresos y vencimientos."
       />
-      <div className="relative bg-white p-4 rounded-lg border border-gray-200 shadow-sm" style={{ height: '70vh' }}>
+      <div className="calendar-container relative bg-white p-4 rounded-lg border border-gray-200 shadow-sm" style={{ height: '70vh' }}>
         <Calendar
           localizer={localizer}
           events={events}
