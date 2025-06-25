@@ -65,18 +65,26 @@ export default function DashboardPage({ onOpenTransactionModal }) {
       .filter(t => t.type === 'expense')
       .reduce((acc, t) => acc + sanitizeAmount(t.amount), 0);
 
+    const paidRecurringIdsThisMonth = new Set(
+      transactions
+        .filter(t => {
+          if (!t.recurringPaymentId) return false;
+          const paymentDate = toTimestamp(t.date)?.toDate();
+          if (!paymentDate) return false;
+          // Check if the transaction date is within the currently viewed month
+          return paymentDate.getFullYear() === viewedDate.getFullYear() &&
+                 paymentDate.getMonth() === viewedDate.getMonth();
+        })
+        .map(t => t.recurringPaymentId)
+    );
+
     const pendingPaymentsForMonth = sanitizedRecurring.filter(p => {
-      const isPaidThisMonth = transactions.some(t => {
-        if (t.recurringPaymentId !== p.id) return false;
-        // Se verifica la fecha real de la transacción ('date'), no un 'targetDate'.
-        const paymentDate = toTimestamp(t.date)?.toDate();
-        if (!paymentDate) return false;
-        return paymentDate.getFullYear() === viewedDate.getFullYear() &&
-               paymentDate.getMonth() === viewedDate.getMonth();
-      });
+      // 1. Check if paid this month using the Set
+      if (paidRecurringIdsThisMonth.has(p.id)) {
+        return false;
+      }
 
-      if (isPaidThisMonth) return false;
-
+      // 2. Check if the payment has started yet
       const startDate = toTimestamp(p.startDate || p.firstPaymentDate)?.toDate();
       if (!startDate) return false;
 
@@ -84,6 +92,7 @@ export default function DashboardPage({ onOpenTransactionModal }) {
         return false;
       }
 
+      // 3. For debts, check if installments are finished
       if (p.type === 'debt' && p.totalInstallments > 0) {
         const installments = Number(p.totalInstallments);
         const firstPaymentMonth = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
@@ -96,6 +105,7 @@ export default function DashboardPage({ onOpenTransactionModal }) {
         }
       }
       
+      // 4. If it passed all checks, it's a pending payment
       return true;
     });
 
