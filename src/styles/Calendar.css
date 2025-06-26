@@ -162,4 +162,9 @@
     padding: 4px 8px;
     font-size: 0.9em;
   }
+
+  .calendar-container .rbc-show-more {
+    font-size: 0.7em; /* Make "show more" link smaller */
+    padding-top: 2px;
+  }
 }

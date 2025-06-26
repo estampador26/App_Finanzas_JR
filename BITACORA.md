@@ -1,5 +1,13 @@
 # Bitácora Técnica - FinanzasJR v3
 
+### 26/06/2025 - 23:01 - Ajuste Visual Final Calendario Móvil
+
+- **OBJETIVO:** Reducir el tamaño del texto "+ X más" en la vista móvil del calendario, como ajuste final para dar por cerrado el módulo.
+- **ACCIÓN PREVISTA:** Se añadirá una regla para el selector `.rbc-show-more` dentro de la media query existente en `src/styles/Calendar.css`.
+- **RESULTADO:** Cambio implementado y validado por el usuario. El calendario queda cerrado a nivel de desarrollo visual.
+
+---
+
 ### 26/06/2025 - 22:58 - Ajuste Visual Calendario Móvil
 
 - **OBJETIVO:** Reducir el tamaño de los eventos en la vista móvil del calendario para mejorar la legibilidad y evitar el amontonamiento visual, atendiendo a la solicitud del usuario.
