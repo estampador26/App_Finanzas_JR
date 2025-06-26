@@ -1,5 +1,26 @@
 # Bitácora Técnica - FinanzasJR v3
 
+### 26/06/2025 - 22:58 - Ajuste Visual Calendario Móvil
+
+- **OBJETIVO:** Reducir el tamaño de los eventos en la vista móvil del calendario para mejorar la legibilidad y evitar el amontonamiento visual, atendiendo a la solicitud del usuario.
+- **ACCIÓN PREVISTA:** Se añadirá una media query específica en `src/styles/Calendar.css` para aplicar estilos más compactos (menor `font-size` y `padding`) a los elementos `.rbc-event` en pantallas pequeñas. La modificación es puramente de CSS y no presenta riesgos para la lógica de la aplicación.
+- **RESULTADO:** Cambio implementado con éxito. El usuario confirma que el tamaño de los eventos en la vista móvil es ahora adecuado. La legibilidad ha mejorado sin afectar la funcionalidad.
+
+---
+
+### 25/06/2025 - Hito: Restauración Funcional y Visual
+
+**Logros Principales:**
+
+1.  **Calendario Restaurado y Mejorado:**
+    - **Lógica de Vencidos:** Se implementó la detección y visualización de pagos recurrentes vencidos de meses anteriores, una función crítica que estaba ausente.
+    - **Rediseño Visual:** Se aplicaron estilos personalizados (`Calendar.css`) para alinear el calendario con la UI/UX general de la aplicación, abandonando los estilos por defecto.
+    - **Pop-up de Eventos:** Se rediseñó por completo el `EventPopover` para ofrecer una experiencia de usuario más rica, informativa y visualmente atractiva, incluyendo iconos y un `StatusBadge` claro.
+    - **Vista Responsive:** Se creó una vista de lista (`MobileCalendarView`) para una experiencia óptima en dispositivos móviles, asegurando la usabilidad en cualquier pantalla.
+
+2.  **Bugs Críticos Solucionados:**
+    - **Actualización de Pagos del Dashboard:** Se corrigió el bug que impedía que los pagos recurrentes registrados desaparecieran de la lista de pendientes. La lógica de filtrado fue refactorizada usando un `Set` para mayor eficiencia y precisión, restaurando la confianza en los datos del dashboard.
+
 Este documento registra cronológicamente las decisiones técnicas, los pasos de desarrollo y los hitos importantes en la reconstrucción de la aplicación FinanzasJR.
 
 ---
@@ -35,6 +56,15 @@ Este documento registra cronológicamente las decisiones técnicas, los pasos de
 
 ### Fase 4: Despliegue y QA (Fecha: 2025-06-23)
 
+---
+
+### Fase 5: Estabilización y Refactorización del Dashboard (Fecha: 2025-06-24)
+
+- **Entrada 52 (Diagnóstico):** Tras feedback del usuario, se confirma que la refactorización inicial del Dashboard fue incompleta. El componente `DashboardPage` fue modificado para centralizar los cálculos, pero los componentes hijos (`MonthlySummaryDashboard`, `PaymentModules`) no fueron actualizados para recibir estos datos, causando que siguieran usando su propia lógica de cálculo (errónea y estática). Esto explica por qué las métricas no se actualizaban y la clasificación de pagos fallaba.
+- **Entrada 53 (Acción - `MonthlySummaryDashboard`):** Se refactoriza `MonthlySummaryDashboard.jsx` para convertirlo en un componente puramente presentacional. Se elimina toda su lógica de cálculo interna (`useMemo`). Ahora recibe una única prop `summaryData` desde `DashboardPage` y se limita a mostrar los valores pre-calculados. Esto asegura que los totales del resumen mensual son consistentes con el motor de cálculo central y se actualizan al navegar entre meses.
+- **Entrada 54 (Acción - `DashboardPage`):** Se corrige la lógica de clasificación de pagos en el motor de cálculo del Dashboard. Un `if-else` defectuoso agrupaba incorrectamente todas las deudas en un solo módulo. La nueva lógica asegura que cada pago se asigne a su módulo correspondiente ('Bancos', 'Compras', 'Servicios'), solucionando el último gran bug de visualización.
+- **Entrada 55 (FIX CRÍTICO - `CategoryChart`):** Se soluciona un error fatal que impedía la carga de la aplicación. El componente `CategoryChart` intentaba acceder a `viewedDate.getFullYear()` antes de que la prop `viewedDate` estuviera disponible, causando un crash. Se añade una guarda para asegurar que el código de filtrado solo se ejecute cuando `viewedDate` tenga un valor válido.
+
 - **Entrada 47:** Se inicializa Firebase Hosting en el proyecto, configurándolo para servir los archivos desde el directorio `dist` como una Single-Page Application.
 - **Entrada 48:** Se construye la aplicación para producción (`npm run build`).
 - **Entrada 49:** Se despliega la aplicación a Firebase Hosting, obteniendo la URL pública: https://finanzasjrweb.web.app.
@@ -46,5 +76,12 @@ Este documento registra cronológicamente las decisiones técnicas, los pasos de
 - **Entrada 38:** Se aplican los nuevos colores del sistema de diseño a los componentes existentes.
 - **Entrada 39:** Se integra la fuente "Inter" desde Google Fonts para mejorar la legibilidad y la estética de la interfaz.
 - **Entrada 40:** Se guarda el sistema de diseño base en un nuevo commit (`style: Establish design system`).
+
+---
+
+### Fase 6: Hito de Funcionalidad y Refinamiento (Fecha: 2025-06-25)
+
+- **Entrada 56 (HITO CRÍTICO):** La aplicación alcanza un estado funcional clave. Se resuelve el último bug de diseño importante en el calendario (`CalendarPage.jsx`), reemplazando la barra de herramientas por defecto con un encabezado personalizado y responsivo. Esto soluciona los problemas de superposición en móviles y mejora la UX. La app es ahora estable y usable en sus módulos principales.
+- **Entrada 57 (UX):** Se reordena la navegación principal para seguir un flujo de trabajo más lógico y funcional, según la solicitud del usuario (`Dashboard -> Calendario -> Pagos Recurrentes -> ...`).
 
 ---

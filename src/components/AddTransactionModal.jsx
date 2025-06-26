@@ -13,7 +13,15 @@ const AddTransactionModal = ({ isOpen, onClose, transactionToEdit, initialData }
     const [user] = useAuthState(auth);
     const isEditing = !!transactionToEdit;
 
-    const [formData, setFormData] = useState({});
+        const getInitialFormData = () => ({
+        amount: '',
+        categoryId: '',
+        description: '',
+        date: new Date(),
+        recurringPaymentId: null,
+    });
+
+    const [formData, setFormData] = useState(getInitialFormData());
     const [expenseCategories, setExpenseCategories] = useState([]);
     const [loading, setLoading] = useState(false);
 
@@ -42,13 +50,7 @@ const AddTransactionModal = ({ isOpen, onClose, transactionToEdit, initialData }
             });
         } else {
             // Reset for new transaction
-            setFormData({
-                amount: '',
-                categoryId: '',
-                description: '',
-                date: new Date(),
-                recurringPaymentId: null,
-            });
+            setFormData(getInitialFormData());
         }
     }, [isOpen, transactionToEdit, initialData]);
 

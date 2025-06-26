@@ -4,7 +4,7 @@ import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { FiBell, FiUser } from 'react-icons/fi';
-import { FaTachometerAlt, FaCalendarAlt, FaSyncAlt, FaDollarSign, FaTags, FaDatabase, FaArrowCircleDown, FaBars, FaTimes, FaSignOutAlt } from 'react-icons/fa';
+import { FaDollarSign, FaTags, FaBars, FaTimes } from 'react-icons/fa';
 
 export default function Layout({ children }) {
   const [user] = useAuthState(auth);
@@ -15,13 +15,11 @@ export default function Layout({ children }) {
   const location = useLocation();
 
   const navigation = [
-    { name: 'Dashboard', href: '/', icon: FaTachometerAlt },
-    { name: 'Calendario', href: '/calendario', icon: FaCalendarAlt },
-    { name: 'Pagos Recurrentes', href: '/pagos-recurrentes', icon: FaSyncAlt },
-    { name: 'Ingresos', href: '/ingresos', icon: FaDollarSign },
-    { name: 'Egresos', href: '/egresos', icon: FaArrowCircleDown },
-    { name: 'Categorías', href: '/categorias', icon: FaTags },
-    { name: 'Gestión de Datos', href: '/gestion-de-datos', icon: FaDatabase },
+    { name: 'Dashboard', href: '/' },
+    { name: 'Pagos Recurrentes', href: '/pagos-recurrentes' },
+    { name: 'Ingresos', href: '/ingresos' },
+    { name: 'Categorías', href: '/categorias' },
+    { name: 'Gestión de Datos', href: '/gestion-de-datos' },
   ];
 
   const linkClasses = ({ isActive }) =>
@@ -196,7 +194,7 @@ export default function Layout({ children }) {
       </nav>
 
       <main>
-        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
           {children}
         </div>
       </main>

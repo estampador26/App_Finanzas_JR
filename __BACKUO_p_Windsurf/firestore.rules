@@ -1,0 +1,28 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Generic rule for all collections
+    // This rule applies to any collection in the database.
+    // It ensures that users can only access documents that have a 'userId' field matching their own UID.
+    match /{collection}/{docId} {
+      
+      // Function to check if the requesting user is the owner of the document.
+      function isOwner() {
+        return request.auth.uid == resource.data.userId;
+      }
+      
+      // Function to check if the user is creating a document for themselves.
+      function isCreatingOwn() {
+        return request.auth.uid == request.resource.data.userId;
+      }
+
+      // Allow read (get, list), update, and delete operations only if the user is the owner.
+      allow read, update, delete: if isOwner();
+      
+      // Allow create operations only if the user is creating a document for themselves.
+      allow create: if isCreatingOwn();
+    }
+  }
+}

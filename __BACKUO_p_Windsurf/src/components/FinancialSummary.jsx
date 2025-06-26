@@ -1,5 +1,8 @@
 import React from 'react';
-import { formatCurrency } from '../utils/currencyUtils';
+
+const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(amount);
+};
 
 export default function FinancialSummary({ totalIncome = 0, totalExpense = 0 }) {
   const balance = totalIncome - totalExpense;

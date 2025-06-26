@@ -17,7 +17,8 @@ export default function EventPopover({ event, onClose, onRegisterPayment }) {
   if (!event) return null;
 
   const { title, resource, start } = event;
-  const { type, amount, isPaid, isOverdue, originalDoc } = resource;
+  const { type, isPaid, isOverdue, originalDoc } = resource;
+  const amount = resource.amount || originalDoc?.amount || 0;
 
   const canRegisterPayment = type === 'recurring' && !isPaid;
 
@@ -37,7 +38,7 @@ export default function EventPopover({ event, onClose, onRegisterPayment }) {
       <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md mx-auto z-50 transform transition-all" onClick={e => e.stopPropagation()}>
         
         <div className="flex justify-between items-center mb-4 pb-3 border-b border-gray-200">
-          <h3 className="text-2xl font-bold text-gray-800">{title.replace(/✅|🔴/g, '').trim()}</h3>
+          <h3 className="text-2xl font-bold text-gray-800">{(title || '').replace(/✅|🔴/g, '').trim()}</h3>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600 rounded-full p-2">
             <FaTimes size={20} />
           </button>

@@ -1,0 +1,242 @@
+# FinanzasJR Renovation Plan
+
+## Notes
+- Transition to a new clean project directory `FinanzasJR-v3`.
+- Continue using the existing Firebase project; no data migration required.
+- Adopt Vite + React with Tailwind CSS for the frontend.
+- Execute work in small, atomic steps; log each step in a technical bitácora.
+- Assistant performs changes; user reviews and approves after each step.
+- Vite React project scaffolded; npm dependencies installed successfully.
+- Tailwind CSS installed and manually configured (npx issue workaround).
+- Firebase SDK installed; firebase.js created using env variables; `.env.local` added and gitignore updated.
+- Dev server running; Vite template cleaned and Tailwind verified.
+- Attempted to resolve PostCSS plugin issue; configuration updated and `@tailwindcss/postcss` installed, but error persists (possible ESM vs CJS conflict).
+- Baseline committed to Git repository.
+- Template assets removed; standard `components` and `pages` directories created.
+- LoginPage component added and integrated; Google Auth sign-in handler implemented.
+- Migrated to Tailwind CSS v4 using `@tailwindcss/vite`; removed `postcss.config.js`; build error resolved.
+- Baseline committed to Git repository.
+- Full authentication flow implemented (Login, Dashboard, auth state listener, sign-out) and committed to Git.
+- `react-icons` added; visual fix for Google icon.
+- Custom color palette defined in Tailwind and applied; Inter font integrated.
+- Technical bitácora formalized in `BITACORA.md` and committed.
+- Reusable `Layout` component with navbar and user dropdown created and integrated; Dashboard refactored.
+- Firebase Hosting initialized; production build generated and preview deployed at https://finanzasjrweb.web.app
+- Deployment configuration files (`firebase.json`, `.firebaserc`) committed to repository
+- TransactionList component created and integrated into Dashboard with mock data
+- FinancialSummary component created and integrated into Dashboard
+- AddTransactionModal component implemented with local transaction creation flow
+- Fixed Firebase SDK issues with env variables and import paths
+- Dashboard connected to Firestore for real-time persistent user-specific transactions; TransactionList date formatting adjusted
+- Encountered Firestore `permission-denied` errors; dashboard fails to load transactions – need to update security rules and verify queries
+- Firestore security rules file created; firebase.json updated to deploy rules
+- Firestore security rules created, deployed; permission errors should be resolved
+- Noticed missing Tailwind styles in production build; investigation underway
+- Firestore composite indexes created; dashboard now loads transactions
+- Attempted explicit PostCSS pipeline; build failed → reverted to @tailwindcss/vite
+- vite.config.js restored, `postcss.config.js` removed; new production build pending
+- Production build succeeded and deployed using @tailwindcss/vite; awaiting user confirmation of styles
+- CSS analysis shows custom classes missing from compiled file; purge suspected
+- Tailwind config updated to absolute content paths; custom classes still missing – need safelist strategy
+- Migrated to Tailwind v4 CSS-first configuration (`@theme` in index.css`); `tailwind.config.js` removed, build size increased and deployed for verification
+- Production styles confirmed working in production by user (issue resolved)
+- User QA: mobile app shows different data than web; new transactions not syncing across devices; other modules/pages pending implementation
+- Cross-device data inconsistency traced to use of different Google accounts; temporary user debug info added to Dashboard and issue resolved
+- Removed temporary user debug info; production redeployed clean
+- Received user's Part 1 aspects (design/UX priorities: reusable components, micro-interactions, mobile-first navigation, gestures, legibility)
+- Received user's Part 2 aspects (legacy features to retain); drafted unified phased roadmap
+- React-router integration refactored in `App.jsx`; dynamic navigation with `Link` in `Layout.jsx`
+- "Control de Deudas" page and "AddDebtModal" skeleton created and linked in navigation
+- DebtsPage connected to Firestore for creating and listing debts
+- Firestore security rules updated for `debts` collection and deployed
+- `react-router-dom` dependency installed; local dev server working
+- AddDebtModal rebuilt with classification fields and conditional inputs
+- Debt list UI updated with edit/delete placeholders and initial/remaining amounts
+- Duplicate default export lint error fixed
+- Delete debt action implemented and confirmed working
+- Edit debt action implemented and confirmed working
+- Agreed to unify Deudas and Pagos Programados into a single "Pagos Recurrentes" section with category support for fixed expenses
+- Updated routing (`App.jsx`) and navigation (`Layout.jsx`) to point to `/pagos-recurrentes` and remove legacy `/deudas` path
+- Added Firestore security rules for `recurringPayments` collection and deployed
+- Implemented first version of `RecurringPaymentModal` with dynamic form for debts vs fixed expenses; major syntax fixes completed
+- RecurringPaymentsPage refactored to load unified `recurringPayments` collection and display debts & expenses with badges and CLP currency formatting
+- Filters implemented in RecurringPaymentsPage; debt flow integration deemed unnecessary (handled by unified modal)
+- Phase 2 initiated: Income module and category enhancements planned
+- Incomes module scaffolding (IncomesPage & IncomeModal) created
+- Route `/ingresos` added to App and navigation; FaDollarSign icon integrated
+- Firestore security rules for `incomes` collection added and deployed
+- IncomeModal implemented with form, validation, and Firestore CRUD
+- IncomesPage connected to Firestore listing with edit/delete integration
+- Firestore security rules for `incomes` collection updated to allow listing
+- Encountered `insufficient permissions` error when saving new recurring payments; issue traced to empty rules file and resolved by recreating and deploying full security rules
+- Firestore security rules for `incomes` collection updated to allow listing
+- Scaffolded Categories module (page, modal, routing, navigation) and added link in navigation
+- Firestore security rules for `categories` collection added and deployed
+- Deployed category security rules to Firebase
+- Category CRUD implemented in CategoriesPage & CategoryModal
+- Replaced 'read' with explicit 'get, list' in Firestore rules across collections; deployed, but dashboard permission error persisted
+- Firestore rules refactored to single generic ownership rule; deployed – awaiting confirmation
+- User reported mobile navigation only shows "Añadir Transacción"; responsive fix pending
+- Dashboard permission error resolved after deploying generic Firestore rules; dashboard loads correctly
+- Fixed NaN calculation in Dashboard by filtering recurring expenses only
+- Standardized `transactions` collection to use `userId` consistently; Dashboard query & creation updated (existing docs require field rename)
+- Added numeric parsing safeguards in IncomeModal and RecurringPaymentModal to prevent NaN values
+- Detected duplicate `isMobileMenuOpen` state declaration in `Layout.jsx`; mobile navigation menu implementation still pending
+- Responsive mobile navigation menu implemented in `Layout.jsx` using `useAuthState`; duplicate state declaration fixed
+- Installed missing `react-firebase-hooks`; removed redundant `Layout` wrapper in `DashboardPage.jsx` fixing duplicate navbar; dev script updated with `vite --host` for mobile testing
+- Installed `postcss` and `autoprefixer`; added `postcss.config.js`, conflict detected with `@tailwindcss/vite`, file removed to restore plugin processing
+- Production build generated and deployed to Firebase hosting (`https://finanzasjrweb.web.app`) after fixes; awaiting mobile verification
+- Mobile access confirmed working on production site; verification complete
+- Production build generated and deployed to Firebase hosting (`https://finanzasjrweb.web.app`) after fixes; awaiting mobile verification
+- Category ID standardization across all forms (transactions, incomes, recurring payments); forms now store `categoryId`
+- Lists updated (Dashboard, Incomes, Recurring Payments) to display category names via in-memory categoriesMap
+- Categories now include icon and color attributes; UI updated across Category, Dashboard, Incomes, and Recurring Payments pages
+- Temporary "Mantenimiento de Datos" button added to Dashboard. Firestore rules temporarily relaxed (read & update) and deployed. Migration query corrected; no legacy docs found.
+- Maintenance button removed and Firestore rules restored; data migration phase closed.
+- Created `MonthlySummary` component and integrated into Dashboard layout.
+- Dashboard crash resolved (date parsing sanitized); MonthlySummary shows zeros/NaN – needs correct calculations.
+- MonthlySummary calculations corrected; values now display correctly.
+- Plan re-prioritized: focus on data backup import/export (Gestión de Datos) next.
+- DataManagementPage scaffolded and integrated; routing & navigation bugs fixed.
+- Export logic implemented in DataManagementPage (generates backup.json).
+- NavLink import added; dashboard loads correctly.
+- CSS classes corrected in DataManagementPage; export button now visible.
+- Import logic implemented in DataManagementPage (deletes existing user data, restores from backup with timestamp conversion; confirmation & feedback added).
+- User reported new UI issues: missing avatar photo, dropdown not auto-closing, active nav link text invisible, duplicate large header titles.
+- Layout UI issues fixed in `Layout.jsx` (avatar now shows, dropdown auto-closes, active nav link styled).
+- Import runtime error fixed (`collection(...).doc is not a function`); import now proceeds with flexible collection handling.
+- Import confirmation modal implemented (shows last transaction dates and requires user approval before overwrite).
+- Export filename now includes timestamp (e.g., backup_YYYY-MM-DD_HH-mm-ss.json) – enhancement completed.
+- Confirmation modal still shows "N/A" for dates; detection logic needs further fix.
+- Added generic debugging console log; discovered backup has transactions array empty but incomes/recurringPayments contain date strings – refine date detection accordingly.
+- Date detection logic updated to scan transactions **and** incomes; confirmation modal now shows correct latest date.
+- Temporary debugging logs added and removed after fix.
+- Date detection logic updated for both backup and current Firestore data; confirmation modal now shows correct dates.
+- Temporary debugging logs added and removed after fix.
+- Robust data validation layer added to import process (schema checks, userId verification, category references).
+- Runtime error during import (`snapshot.docs[0].data(...).date.toDate is not a function`) fixed by normalizing date fields when reading current Firestore data.
+- Import/export workflow fully validated by user; feature considered complete.
+- Next focus: enrich Dashboard with advanced widgets (expenses by category chart using `recharts`).
+- Installed `recharts`; created and integrated placeholder `CategoryChart` component into Dashboard.
+- Extracted `toTimestamp` helper into `utils/dateUtils.js` and removed duplicates; fixed syntax errors in DataManagementPage.
+- Connected `CategoryChart` to real expenses data and updated Dashboard layout.
+- User requested more icons for categories and subtle UI animations; will enhance icon options and add hover effects.
+- CategoryModal refactored with searchable icon picker; icon selection saved and edit mode supported
+- Global hover transitions and scale utility added in index.css; merged @theme blocks to resolve conflicts
+- Attempted to apply hover animations in DashboardPage; precise integration still pending
+- Received full `DashboardPage.jsx` code to enable correct hover integration
+- Hover animations successfully integrated into DashboardPage; micro-interactions task complete
+- CategoryChart component code obtained, development server running for visual review
+- CategoryChart polished to donut chart with custom tooltip and legend
+## Task List
+- [x] Decide to create new folder for project (`FinanzasJR-v3`)
+- [x] Initialize Vite + React project in new folder
+- [x] Install and configure Tailwind CSS
+- [x] Connect project to existing Firebase backend
+- [x] Clean default Vite template and verify Tailwind
+- [x] Commit baseline to version control
+- [x] Fix Tailwind PostCSS plugin error (@tailwindcss/postcss)
+- [x] Create standard components and pages directories
+- [x] Create and integrate LoginPage component
+- [x] Resolve Tailwind PostCSS plugin error by migrating to Tailwind v4
+- [x] Migrate authentication view/component
+- [x] Manage authenticated user state and conditional routing
+- [x] Rebuild dashboard page as React component
+- [x] Establish design system (colors, typography)
+- [x] Implement technical bitácora logging after each step
+- [x] Deploy preview to Firebase hosting
+- [x] Create and integrate TransactionList component
+- [x] Create and integrate FinancialSummary component
+- [x] Implement AddTransactionModal component and local transaction flow
+- [x] Connect dashboard to Firestore for persistent transactions
+- [x] Configure Firestore security rules for authenticated user-specific access
+- [x] Debug dashboard blank state and loading logic after login
+- [x] Revert CSS build pipeline to @tailwindcss/vite plugin
+- [x] Migrate to CSS-first Tailwind v4 configuration and redeploy
+- [x] Investigate and fix missing Tailwind styles in production build
+  - [x] Verify Tailwind content paths/safelist for custom classes
+  - [x] Add safelist for custom color utilities and rebuild
+- [x] Investigate cross-device Firestore sync inconsistency (mobile vs web)
+- [x] Remove temporary user debug info from Dashboard
+- [x] Gather user's vision (Part 1) and summarize priorities
+- [x] Gather detailed functional requirements (Part 2) and update plan
+- [x] Obtain user confirmation for phased development roadmap
+- [x] Phase 1: Control de Deudas & Pagos Recurrentes
+  - [x] Create "Control de Deudas" view/component
+  - [x] Connect DebtsPage with Firestore (create & list)
+  - [x] Add Firestore security rules for debts collection
+  - [x] Expand AddDebtModal with classification fields and conditional inputs
+  - [x] Implement delete debt action
+  - [x] Implement edit debt action
+  - [x] Design unified "Pagos Recurrentes" data model (deudas + gastos fijos)
+  - [x] Update routing and navigation to new `/pagos-recurrentes` section
+  - [x] Add Firestore security rules for `recurringPayments` collection
+  - [x] Implement dynamic `RecurringPaymentModal` (deuda vs gasto fijo)
+  - [x] Create `RecurringPaymentsPage` view/component with listing
+  - [x] Hook listing to Firestore `recurringPayments` collection
+  - [x] Integrate modal into page (add / edit / delete flows)
+  - [x] Add filters to `RecurringPaymentsPage`
+  - [x] Adapt existing debt creation flow to add/update recurring payment rule automatically (now covered by unified modal)
+- [ ] Phase 2: Ingresos & Categorías
+  - [x] Design income data model
+  - [x] Scaffold Incomes module: page, modal, routing, navigation
+  - [x] Add Firestore security rules for `incomes` collection
+  - [x] Implement IncomeModal with Firestore add/edit logic
+  - [x] Connect IncomesPage with Firestore (list, edit, delete)
+  - [x] Fix Firestore rules for `recurringPayments` create/write permissions (bug)
+  - [x] Integrate incomes into FinancialSummary
+  - [x] Scaffold Categories module: page, modal, routing, navigation
+  - [x] Add Firestore security rules for `categories` collection
+  - [x] Implement Category CRUD (list, add, edit, delete)
+  - [x] Integrate categories into income form
+  - [x] Integrate categories into expense form
+  - [x] Validate category selection on form submission
+  - [x] Integrate categories into recurring payment form
+  - [x] Standardize `userId` field in transactions (query & create)
+  - [x] Add numeric parsing to IncomeModal and RecurringPaymentModal to prevent NaN values
+  - [x] Standardize category reference to ID across all forms
+  - [x] Display category names in Dashboard, Incomes and Recurring Payments lists
+  - [x] Add icon and color fields to categories and update UI
+  - [x] Migrate existing transaction documents from `uid` to `userId`
+    - [x] Add temporary Data Maintenance button to Dashboard
+    - [x] Adjust Firestore security rules to allow migration
+    - [x] Update migration query to securely filter legacy docs
+    - [x] Run migration script and verify updated documents (no legacy docs found)
+    - [x] Remove maintenance button and restore rules
+- [ ] Phase 3: Legacy Dashboard & Utilities
+  - [x] Scaffold MonthlySummary component and initial integration
+  - [x] Fix Dashboard crash
+  - [x] Complete MonthlySummary data calculations (use stored data)
+  - [ ] Verify MonthlySummary displays correct values with full dataset
+  - [ ] Implement advanced monthly dashboard widgets (original app parity)
+  - [ ] Implement payments calendar view
+  - [x] Implement data backup (export / import)
+    - [x] Create "Gestión de Datos" page and add to navigation
+    - [x] Implement Export: generate downloadable backup.json with all user collections
+    - [x] Fix invisible Export button (update CSS classes)
+    - [x] Implement Import: read backup.json and restore documents to Firestore
+    - [x] Fix import runtime error (use correct Firestore doc creation)
+    - [x] Show confirmation modal comparing last transaction date before import
+    - [x] Fix date detection in confirmation modal (search across collections)
+    - [x] Detect latest date from current Firestore data and display in confirmation modal
+    - [x] Validate import data integrity and handle conflicts
+    - [x] Provide progress and error feedback to user
+    - [x] Append timestamp to exported backup filename
+    - [x] Include creation date & time in exported backup filename
+    - [x] Fix runtime error when reading current Firestore data during import (date.toDate issue)
+- [x] Fix broken user avatar icon in navbar
+- [x] Fix `NavLink is not defined` crash in Layout navigation
+- [x] Fix UI polish issues reported (avatar image, dropdown auto-close, navigation label duplication)
+- [ ] Implement advanced monthly dashboard widgets (original app parity)
+  - [x] Add expenses by category chart (recharts)
+  - [x] Install `recharts` dependency
+  - [x] Create `CategoryChart` component with placeholder data
+  - [x] Integrate `CategoryChart` into Dashboard layout
+  - [x] Connect `CategoryChart` to real expenses data
+  - [x] Polish `CategoryChart` styling and legend
+  - [x] Expand category icon library and update CategoryModal
+  - [x] Add hover animations and micro-interactions across UI
+  - [x] Apply hover animations to Dashboard components
+    - [x] Integrate `btn-hover-scale` into DashboardPage elements accurately
+## Current Goal
+- Plan payments calendar view

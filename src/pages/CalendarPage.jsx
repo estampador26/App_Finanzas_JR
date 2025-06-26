@@ -9,13 +9,13 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import '../styles/Calendar.css';
 import Header from '../components/Header';
 import EventPopover from '../components/EventPopover';
-import MobileCalendarView from '../components/MobileCalendarView';
-import useWindowWidth from '../hooks/useWindowWidth';
+
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { collection, query, where } from 'firebase/firestore';
 import { db } from '../firebase';
 import { toTimestamp } from '../utils/dateUtils';
 import { getMonth, getYear, setDate } from 'date-fns';
+import CalendarLegend from '../components/CalendarLegend';
 
 const locales = {
   'es': es,
@@ -29,15 +29,26 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
+const messages = {
+    'allDay': 'Todo el día',
+    'previous': 'Anterior',
+    'next': 'Siguiente',
+    'today': 'Hoy',
+    'month': 'Mes',
+    'week': 'Semana',
+    'day': 'Día',
+    'agenda': 'Agenda',
+    'date': 'Fecha',
+    'time': 'Hora',
+    'event': 'Evento',
+    'noEventsInRange': 'No hay eventos en este rango.',
+    'showMore': total => `+ ${total} más`
+};
+
 const eventStyleGetter = (event) => {
     const style = {
         backgroundColor: event.resource.color,
-        borderRadius: '5px',
         opacity: 0.9,
-        color: 'white',
-        border: '0px',
-        display: 'block',
-        padding: '2px 5px',
     };
     return {
         style: style
@@ -48,7 +59,7 @@ const eventStyleGetter = (event) => {
 export default function CalendarPage({ user, onOpenTransactionModal }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedEvent, setSelectedEvent] = useState(null);
-  const windowWidth = useWindowWidth();
+  
 
   const [transactionsSnapshot, loadingTransactions] = useCollection(
     user ? query(collection(db, 'transactions'), where('userId', '==', user.uid)) : null
@@ -76,65 +87,82 @@ export default function CalendarPage({ user, onOpenTransactionModal }) {
     if (recurringPaymentsSnapshot && transactionsSnapshot) {
       const allTransactions = transactionsSnapshot.docs.map(d => ({ id: d.id, ...d.data() }));
 
-      recurringPaymentsSnapshot.docs.forEach(doc => {
+                                          recurringPaymentsSnapshot.docs.forEach(doc => {
         const payment = { id: doc.id, ...doc.data() };
-        const paymentDate = setDate(new Date(year, month), payment.paymentDay);
+        // Correctly convert Firestore Timestamp to JS Date.
+        // The ?.toDate() handles cases where startDate might be null or missing.
+        const initialDate = payment.startDate?.toDate();
 
-        const isPaidThisMonth = allTransactions.some(t => {
-          const tDate = toTimestamp(t.date)?.toDate();
-          return t.recurringPaymentId === payment.id && tDate && getYear(tDate) === year && getMonth(tDate) === month;
-        });
+        // If a start date exists, create a comparable UTC date. Otherwise, this will be null.
+        const compareStartDateUTC = initialDate 
+          ? new Date(Date.UTC(initialDate.getUTCFullYear(), initialDate.getUTCMonth(), initialDate.getUTCDate()))
+          : null;
 
-        // Lógica para pagos del mes actual
-        if (!isPaidThisMonth) {
-            monthEvents.push({
-                title: payment.name,
-                start: paymentDate,
-                end: paymentDate,
-                allDay: true,
-                resource: { 
-                    type: 'recurring',
-                    amount: payment.amount, 
-                    isPaid: false,
-                    color: paymentDate < today ? '#ef4444' : '#3b82f6', // Vencido o pendiente
-                    originalDoc: payment
-                }
-            });
-        } else {
-           monthEvents.push({
-                title: `✅ ${payment.name}`,
-                start: paymentDate,
-                end: paymentDate,
-                allDay: true,
-                resource: { type: 'recurring', amount: payment.amount, isPaid: true, color: '#22c55e', originalDoc: payment }
-            });
-        }
+        const paymentDateLocal = setDate(new Date(year, month), payment.paymentDay);
+        const paymentDateUTC = new Date(Date.UTC(year, month, payment.paymentDay));
 
-        // Lógica para pagos vencidos de meses anteriores
-        for (let m = 0; m < month; m++) {
-          const pastMonthDate = setDate(new Date(year, m), payment.paymentDay);
-          const isPaidInPastMonth = allTransactions.some(t => {
-            const tDate = toTimestamp(t.date)?.toDate();
-            return t.recurringPaymentId === payment.id && tDate && getYear(tDate) === year && getMonth(tDate) === m;
+        // A payment is shown if:
+        // 1. It has no start date (legacy data).
+        // 2. Or its start date is before or on the payment date for the current view.
+        if (!compareStartDateUTC || paymentDateUTC.getTime() >= compareStartDateUTC.getTime()) {
+          const isPaidThisMonth = allTransactions.some(t => {
+            const tDate = t.date?.toDate(); // Also fix here for transaction dates
+            return t.recurringPaymentId === payment.id && tDate && getYear(tDate) === year && getMonth(tDate) === month;
           });
 
-          if (!isPaidInPastMonth && pastMonthDate < today) {
-            const alreadyExists = monthEvents.some(e => e.resource.originalDoc.id === payment.id && e.resource.isOverdue);
-            if (!alreadyExists) {
-              monthEvents.push({
+          if (!isPaidThisMonth) {
+            monthEvents.push({
+              title: payment.name,
+              start: paymentDateLocal,
+              end: paymentDateLocal,
+              allDay: true,
+              resource: {
+                type: 'recurring',
+                amount: payment.amount,
+                isPaid: false,
+                color: paymentDateLocal < today ? '#ef4444' : '#3b82f6',
+                originalDoc: payment,
+              },
+            });
+          } else {
+            monthEvents.push({
+              title: `✅ ${payment.name}`,
+              start: paymentDateLocal,
+              end: paymentDateLocal,
+              allDay: true,
+              resource: { type: 'recurring', amount: payment.amount, isPaid: true, color: '#22c55e', originalDoc: payment },
+            });
+          }
+        }
+
+        // Overdue payments logic
+        for (let m = 0; m < month; m++) {
+          const pastMonthDateUTC = new Date(Date.UTC(year, m, payment.paymentDay));
+          // Also check here: show overdue if no start date OR if start date check passes.
+          if (!compareStartDateUTC || pastMonthDateUTC.getTime() >= compareStartDateUTC.getTime()) {
+            const isPaidInPastMonth = allTransactions.some(t => {
+              const tDate = t.date?.toDate(); // Fix here as well
+              return t.recurringPaymentId === payment.id && tDate && getYear(tDate) === year && getMonth(tDate) === m;
+            });
+            const pastMonthDateLocal = setDate(new Date(year, m), payment.paymentDay);
+            if (!isPaidInPastMonth && pastMonthDateLocal < today) {
+              const alreadyExists = monthEvents.some(e => e.resource.originalDoc.id === payment.id && e.resource.isOverdue);
+              if (!alreadyExists) {
+                monthEvents.push({
                   title: `🔴 VENCIDO - ${payment.name}`,
-                  start: setDate(new Date(year, month), 1), // Mostrar al inicio del mes actual
+                  start: setDate(new Date(year, month), 1),
                   end: setDate(new Date(year, month), 1),
                   allDay: true,
-                  resource: { 
-                      type: 'recurring',
-                      amount: payment.amount, 
-                      isPaid: false,
-                      isOverdue: true,
-                      color: '#ef4444',
-                      originalDoc: payment
-                  }
-              });
+                  resource: {
+                    type: 'recurring',
+                    amount: payment.amount,
+                    isPaid: false,
+                    isOverdue: true,
+                    color: '#ef4444',
+                    originalDoc: payment,
+                  },
+                });
+              }
             }
           }
         }
@@ -175,7 +203,7 @@ export default function CalendarPage({ user, onOpenTransactionModal }) {
                     resource: { 
                         type: 'income', 
                         amount: income.amount,
-                        color: '#84cc16',
+                        color: '#22c55e',
                         originalDoc: income
                     }
                 });
@@ -216,10 +244,8 @@ export default function CalendarPage({ user, onOpenTransactionModal }) {
         title="Calendario Financiero"
         subtitle="Visualiza tus pagos, ingresos y vencimientos."
       />
-      <div className="calendar-container relative bg-white p-4 rounded-lg border border-gray-200 shadow-sm" style={windowWidth >= 768 ? { height: '70vh' } : {}}>
-        {windowWidth < 768 ? (
-          <MobileCalendarView events={events} onEventClick={handleSelectEvent} />
-        ) : (
+            <CalendarLegend />
+      <div className="calendar-container relative bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
           <Calendar
             localizer={localizer}
             events={events}
@@ -229,13 +255,9 @@ export default function CalendarPage({ user, onOpenTransactionModal }) {
             messages={messages}
             onSelectEvent={handleSelectEvent}
             eventPropGetter={eventStyleGetter}
-            components={{
-              toolbar: CustomToolbar,
-            }}
             onNavigate={handleNavigate}
             date={currentDate}
           />
-        )}
       </div>
         <EventPopover 
             event={selectedEvent}
