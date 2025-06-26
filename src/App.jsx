@@ -12,6 +12,7 @@ import ExpensesPage from './pages/ExpensesPage';
 import CategoriesPage from './pages/CategoriesPage';
 import CalendarPage from './pages/CalendarPage';
 import DataManagementPage from './pages/DataManagementPage';
+import SettingsPage from './pages/SettingsPage';
 import AddTransactionModal from './components/AddTransactionModal';
 import RecurringPaymentModal from './components/RecurringPaymentModal';
 
@@ -90,7 +91,8 @@ function App() {
                       onOpenRecurringPaymentModal={handleOpenRecurringPaymentModal} 
                     />}
                   />
-                  <Route path="/gestion-de-datos" element={<DataManagementPage user={user} />} />
+                                    <Route path="/gestion-de-datos" element={<DataManagementPage user={user} />} />
+                  <Route path="/ajustes" element={<SettingsPage />} />
                 </Routes>
               </Layout>
             </ProtectedRoute>

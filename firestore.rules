@@ -32,5 +32,12 @@ service cloud.firestore {
       allow read, update, delete: if request.auth != null && resource.data.userId == request.auth.uid;
       allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
     }
+
+    // FCM Tokens: Users can manage their own device tokens for notifications.
+    match /fcmTokens/{token} {
+      // Allow users to create and manage their own tokens.
+      allow create, read, update, delete: if request.auth != null && 
+                                            (request.resource.data.userId == request.auth.uid || resource.data.userId == request.auth.uid);
+    }
   }
 }

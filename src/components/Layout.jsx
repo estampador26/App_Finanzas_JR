@@ -4,7 +4,7 @@ import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { FiBell, FiUser } from 'react-icons/fi';
-import { FaTachometerAlt, FaCalendarAlt, FaSyncAlt, FaDollarSign, FaTags, FaDatabase, FaArrowCircleDown, FaBars, FaTimes, FaSignOutAlt } from 'react-icons/fa';
+import { FaTachometerAlt, FaCalendarAlt, FaSyncAlt, FaDollarSign, FaTags, FaDatabase, FaArrowCircleDown, FaBars, FaTimes, FaSignOutAlt, FaCog } from 'react-icons/fa';
 
 export default function Layout({ children }) {
   const [user] = useAuthState(auth);
@@ -110,6 +110,9 @@ export default function Layout({ children }) {
                   </div>
                   {isMenuOpen && (
                     <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabIndex="-1">
+                      <Link to="/ajustes" className="w-full text-left block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100" role="menuitem" tabIndex="-1">
+                        Ajustes
+                      </Link>
                       <button onClick={handleLogout} className="w-full text-left block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100" role="menuitem" tabIndex="-1">
                         Cerrar Sesión
                       </button>
