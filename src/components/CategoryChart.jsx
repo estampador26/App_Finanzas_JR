@@ -72,7 +72,7 @@ const CustomTooltip = ({ active, payload }) => {
   return null;
 };
 
-const CategoryChart = ({ transactions, categoriesMap, isPrivacyMode }) => {
+const CategoryChart = ({ transactions, categoriesMap, onCategorySelect, isPrivacyMode }) => {
   const [activeIndex, setActiveIndex] = useState(0);
 
   const onPieEnter = (_, index) => {
@@ -92,6 +92,7 @@ const CategoryChart = ({ transactions, categoriesMap, isPrivacyMode }) => {
 
       if (!acc[categoryId]) {
         acc[categoryId] = { 
+          id: categoryId, 
           name: categoriesMap[categoryId].name,
           value: 0,
           color: categoriesMap[categoryId].color || '#cccccc'
@@ -136,12 +137,13 @@ const CategoryChart = ({ transactions, categoriesMap, isPrivacyMode }) => {
                   data={chartData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={70}
-                  outerRadius={90}
+                  innerRadius={60}
+                  outerRadius={80}
                   fill="#8884d8"
                   dataKey="value"
-                  nameKey="name"
                   onMouseEnter={onPieEnter}
+                  onClick={(data) => onCategorySelect(data.id)}
+                  style={{ cursor: 'pointer' }}
                 >
                   {chartData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} className="focus:outline-none stroke-white" strokeWidth={2} />

@@ -1,5 +1,18 @@
 # Bitácora Técnica - FinanzasJR v3
 
+### 26/06/2025 - Hito: Dashboard Avanzado Interactivo
+
+- **OBJETIVO:** Enriquecer el dashboard con visualizaciones de datos avanzadas para proporcionar una visión más profunda de las finanzas del usuario, y establecer un punto de control antes de iniciar el desarrollo de notificaciones.
+
+- **LOGROS:**
+  1.  **Gráfico de Tendencias:** Se implementó el componente `TrendChart` para mostrar la evolución de ingresos, gastos y balance durante los últimos 6 meses, ofreciendo una perspectiva temporal clave.
+  2.  **Gráfico de Categorías Interactivo:** Se refactorizó el `CategoryChart` y `DashboardPage` para introducir interactividad. Al hacer clic en una categoría del gráfico, la lista de transacciones se filtra automáticamente, permitiendo un análisis de gastos detallado y visual.
+  3.  **Corrección de Bug Crítico:** Se solucionó un `ReferenceError` causado por la eliminación accidental de la prop `isPrivacyMode` en `CategoryChart` durante el refactor. El error fue identificado y corregido rápidamente, restaurando la funcionalidad del dashboard.
+
+- **PUNTO DE CONTROL:** Se realiza un commit a GitHub con el mensaje `feat(dashboard): Implement advanced charts and interactivity` para consolidar estos avances y crear una línea base estable antes de proceder con nuevas funcionalidades.
+
+---
+
 ### 26/06/2025 - 23:01 - Ajuste Visual Final Calendario Móvil
 
 - **OBJETIVO:** Reducir el tamaño del texto "+ X más" en la vista móvil del calendario, como ajuste final para dar por cerrado el módulo.

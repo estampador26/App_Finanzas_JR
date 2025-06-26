@@ -12,11 +12,16 @@ import PaymentModules from '../components/PaymentModules';
 import Header from '../components/Header';
 import MonthNavigator from '../components/MonthNavigator';
 import CategoryChart from '../components/CategoryChart';
+import MonthlyChart from '../components/MonthlyChart';
+import TrendChart from '../components/TrendChart';
 
 export default function DashboardPage({ onOpenTransactionModal }) {
   const [user, loadingAuth] = useAuthState(auth);
   const [isPrivacyMode, setIsPrivacyMode] = useState(false);
-  const [viewedDate, setViewedDate] = useState(new Date());
+    const [viewedDate, setViewedDate] = useState(new Date());
+
+    const monthName = useMemo(() => viewedDate.toLocaleString('es-CL', { month: 'long' }), [viewedDate]);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
 
   const [incomesSnapshot, loadingIncomes] = useCollection(
     user ? query(collection(db, 'incomes'), where('userId', '==', user.uid)) : null
@@ -147,7 +152,54 @@ export default function DashboardPage({ onOpenTransactionModal }) {
       categorizedPayments,
       transactionsForMonth,
     };
-  }, [viewedDate, incomes, transactions, recurringPayments, categoriesMap]);
+  }, [viewedDate, incomes, transactions, recurringPayments]);
+
+  const trendData = useMemo(() => {
+    const data = [];
+    const sanitizeAmount = (value) => parseFloat(value) || 0;
+
+    for (let i = 5; i >= 0; i--) {
+      const date = new Date(viewedDate);
+      date.setMonth(viewedDate.getMonth() - i);
+      const monthName = date.toLocaleString('es-CL', { month: 'short' });
+      
+      const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+      const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+      endOfMonth.setHours(23, 59, 59, 999);
+
+      const monthlyIncomes = incomes
+        .filter(inc => {
+          const incDate = toTimestamp(inc.date)?.toDate();
+          return incDate && incDate >= startOfMonth && incDate <= endOfMonth;
+        })
+        .reduce((acc, inc) => acc + sanitizeAmount(inc.amount), 0);
+
+      const monthlyExpenses = transactions
+        .filter(t => {
+          const tDate = toTimestamp(t.date)?.toDate();
+          return t.type === 'expense' && tDate && tDate >= startOfMonth && tDate <= endOfMonth;
+        })
+        .reduce((acc, t) => acc + sanitizeAmount(t.amount), 0);
+
+      data.push({
+        month: monthName.charAt(0).toUpperCase() + monthName.slice(1),
+        ingresos: monthlyIncomes,
+        gastos: monthlyExpenses,
+        balance: monthlyIncomes - monthlyExpenses,
+      });
+    }
+    return data;
+    }, [viewedDate, incomes, transactions]);
+
+  const handleCategorySelect = (categoryId) => {
+    // If the same category is clicked again, clear the filter
+    setSelectedCategoryId(prevId => (prevId === categoryId ? null : categoryId));
+  };
+
+  const filteredTransactionsForList = useMemo(() => {
+    if (!selectedCategoryId) return dashboardData.transactionsForMonth;
+    return dashboardData.transactionsForMonth.filter(t => t.categoryId === selectedCategoryId);
+  }, [selectedCategoryId, dashboardData.transactionsForMonth]);
 
 
 
@@ -211,10 +263,37 @@ export default function DashboardPage({ onOpenTransactionModal }) {
         isPrivacyMode={isPrivacyMode}
       />
 
-      <CategoryChart transactions={dashboardData.transactionsForMonth} categoriesMap={categoriesMap} />
+            <CategoryChart 
+        transactions={dashboardData.transactionsForMonth} 
+        categoriesMap={categoriesMap} 
+        onCategorySelect={handleCategorySelect} 
+        isPrivacyMode={isPrivacyMode}
+      />
+
+      <MonthlyChart 
+        incomes={dashboardData.monthlyIncomes}
+        expenses={dashboardData.totalMonthlyPayments}
+        monthName={monthName}
+      />
+
+            <TrendChart data={trendData} />
+
+      {selectedCategoryId && (
+        <div className="flex justify-between items-center mt-6 mb-2">
+          <h3 className="text-lg font-semibold text-gray-800">
+            Gastos de: <span className="font-bold text-primary">{categoriesMap[selectedCategoryId]?.name || 'Categoría'}</span>
+          </h3>
+          <button 
+            onClick={() => setSelectedCategoryId(null)}
+            className="btn btn-ghost btn-sm text-primary hover:bg-primary-focus hover:text-white"
+          >
+            Limpiar Filtro
+          </button>
+        </div>
+      )}
 
       <TransactionList 
-        transactions={dashboardData.transactionsForMonth} 
+        transactions={filteredTransactionsForList} 
         categoriesMap={categoriesMap} 
         isPrivacyMode={isPrivacyMode} 
       />
